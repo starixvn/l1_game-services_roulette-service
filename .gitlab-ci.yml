@@ -1,0 +1,4 @@
+include:
+  - project: "ci/repos-ci/pentagon_l1_keno_pro_max_service"
+    ref: master
+    file: "gitlab-ci.yml"
