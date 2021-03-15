@@ -40,9 +40,9 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "http://4124ada23b0c484f877a6ffd8eb690f0@sentry.lumigame.com/5",
-        logIdentifier: "kenopromax",
-        env: "LOCAL",
+        sentryUrl: "http://7bcf75387f74440ca2a41f7dd51a7c7f@sentry.lumigame.com/14",
+        logIdentifier: "roulette",
+        env: "DEV",
     },
     authenticateSettings: {
         audiences: ["api", "admin-api"],

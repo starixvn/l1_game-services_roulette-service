@@ -1,58 +1,41 @@
 import Chance from "chance";
-import RandomJs from "random-js";
+import randomLib1 from "random";
+import { Random, MersenneTwister19937 } from "random-js";
+import Constants from "../constants";
+import { ChoiceHelper } from "../helpers";
 
-const { Random, MersenneTwister19937 } = RandomJs;
-const chance = new Chance();
-const random = new Random(MersenneTwister19937.autoSeed());
-const seeds = [...Array(81).keys()].slice(1);
+function random1(min, max) {
+    return Math.floor(Math.random() * max) + min;
+}
 
-const shuffleThenPickOut20ByChance = () => chance.pickset(seeds, 20);
+function random2(min, max) {
+    const chance = new Chance();
+    return chance.natural({ min: min, max: max });
+}
 
-const random20UniqueNumbersByChance = () => chance.unique(chance.natural, 20, { min: 1, max: 80 });
+function random3(min, max) {
+    const chance = new Chance();
+    return chance.integer({ min: min, max: max });
+}
 
-const shuffleThenPickOut20ByRandomJs = () => random.shuffle([...seeds]).slice(0, 20);
+function random4(min, max) {
+    return randomLib1.int(min, max);
+}
 
-const randomlyPick20NumbersByRandomJs = () => random.sample(seeds, 20);
+function random5(min, max) {
+    const randomJs = new Random(MersenneTwister19937.autoSeed());
+    return randomJs.integer(min, max);
+}
 
-const algorithms = [
-    shuffleThenPickOut20ByChance,
-    random20UniqueNumbersByChance,
-    shuffleThenPickOut20ByRandomJs,
-    randomlyPick20NumbersByRandomJs,
-];
-
-const settlementRuleEntries = Object.entries({
-    big: (totalPoints) => totalPoints >= 811,
-    small: (totalPoints) => totalPoints <= 810,
-    odd: (totalPoints) => totalPoints % 2 === 1,
-    even: (totalPoints) => totalPoints % 2 === 0,
-    gold: (totalPoints) => 210 <= totalPoints && totalPoints <= 695,
-    wood: (totalPoints) => 696 <= totalPoints && totalPoints <= 763,
-    water: (totalPoints) => 764 <= totalPoints && totalPoints <= 855,
-    fire: (totalPoints) => 856 <= totalPoints && totalPoints <= 923,
-    earth: (totalPoints) => 924 <= totalPoints && totalPoints <= 1410,
-});
+const randomFunctions = [random1, random2, random3, random4, random5];
 
 export const generateResult = () => {
-    const randomSelection = chance.natural({
-        min: 0,
-        max: algorithms.length - 1,
-    });
-    let result = algorithms[randomSelection]();
+    const selectedRandomMethodIndex = Math.floor(Math.random() * (randomFunctions.length - 1));
+    const randomFunction = randomFunctions[selectedRandomMethodIndex];
 
-    result.sort((pre, next) => pre - next);
-
-    return result;
+    return randomFunction(Constants.numberWheel.min, Constants.numberWheel.max);
 };
 
 export const getSettlementResult = (roundResult) => {
-    const totalPoints = roundResult.reduce((total, number) => total + number, 0);
-
-    const settlementResult = settlementRuleEntries.reduce((settlementTempResult, [choice, rule]) => {
-        settlementTempResult[choice] = rule(totalPoints);
-
-        return settlementTempResult;
-    }, {});
-
-    return settlementResult;
+    return ChoiceHelper.generateChoiceByNumber(roundResult);
 };

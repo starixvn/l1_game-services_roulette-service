@@ -1,4 +1,5 @@
-import KenoProMaxBot from "./keno-pro-max-bot";
-import KenoProMaxGameCron from "./keno-pro-max-game-cron";
+import RouletteBot from "./roulette-bot";
+import RouletteGameCron from "./roulette-game-cron";
+import RouletteProcessBetQueue from "./roulette-process-bet-queue";
 
-export { KenoProMaxBot, KenoProMaxGameCron };
+export { RouletteBot, RouletteGameCron, RouletteProcessBetQueue };

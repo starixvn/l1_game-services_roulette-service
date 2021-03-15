@@ -21,6 +21,7 @@
     "type": "module",
     "dependencies": {
         "nodemon": "^2.0.4",
+        "random": "^3.0.3",
         "random-js": "^2.1.0",
         "sc-game-base": "1.19.0-beta.3"
     },

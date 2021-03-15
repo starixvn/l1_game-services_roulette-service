@@ -8284,6 +8284,13 @@ random-js@^2.1.0:
   resolved "http://npm.lumigame.com/random-js/-/random-js-2.1.0.tgz#0c03238b0a4f701f7a4c7303036ade3083d8ee14"
   integrity sha512-CRUyWmnzmZBA7RZSVGq0xMqmgCyPPxbiKNLFA5ud7KenojVX2s7Gv+V7eB52beKTPGxWRnVZ7D/tCIgYJJ8vNQ==
 
+random@^3.0.3:
+  version "3.0.3"
+  resolved "http://npm.lumigame.com/random/-/random-3.0.3.tgz#5929021da0f8e308bc9fe15e030bef568e83f5db"
+  integrity sha512-Ppz8eI5oYbzC0dQKW3oSFFtyKnh7B1kN1kD7s6J545/aq+R1+YcqQEDJ5AZ0di3wYWbFV9otf5MaHJAhYH56Fw==
+  dependencies:
+    seedrandom "^3.0.5"
+
 range-parser@~1.2.1:
   version "1.2.1"
   resolved "http://npm.lumigame.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
@@ -8879,6 +8886,11 @@ sc-semantic-release@^1.1.0:
   version "1.2.0"
   resolved "http://npm.lumigame.com/sc-semantic-release/-/sc-semantic-release-1.2.0.tgz#52ea7bd1aa4d5c41315a16c2c4e4f0437befdbcb"
   integrity sha512-izZqZiS8hL05cGzYbcR3+GZ1Oktr9rU1nIL05S9mZnEBm5nZfqzRkSpR2OHVJARjYsMI5dps0oUX1HjFV9x47w==
+
+seedrandom@^3.0.5:
+  version "3.0.5"
+  resolved "http://npm.lumigame.com/seedrandom/-/seedrandom-3.0.5.tgz#54edc85c95222525b0c7a6f6b3543d8e0b3aa0a7"
+  integrity sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==
 
 semantic-release@^17.1.1:
   version "17.4.1"

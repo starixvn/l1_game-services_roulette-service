@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { helpers } from "sc-common";
 import { Core, Table } from "sc-game-base";
+import chance from "chance";
 
 import constants from "../constants";
 
-export default class KenoProMaxBot extends Table.Crons.TableGameBot {
+export default class RouletteBot extends Table.Crons.TableGameBot {
     /**
      * @param {Table.TableGameDefinition} definition
      * @param {Table.TableGameData} gameData
@@ -16,14 +17,11 @@ export default class KenoProMaxBot extends Table.Crons.TableGameBot {
         super(definition, gameData, publisher, userInfosRepository, tempBetsRepository);
 
         this.betChoiceRatio = {
-            MainOpts: 86, //big | small
-            SubOpts: 10, //even | odd
-            RareOpts: 4, //earth | fire | gold | water | wood
+            straightUpSplit: 60,
+            others: 40,
         };
 
-        this.mainOpts = ["big", "small"];
-        this.subOpts = ["even", "odd"];
-        this.rareOpts = ["earth", "fire", "gold", "water", "wood"];
+        this.uniqueBetTypes = ["bigSmall", "redBlack", "oddEven"];
 
         this.smallTicketRatio = 70;
         this.smallTickets = 0;
@@ -37,15 +35,27 @@ export default class KenoProMaxBot extends Table.Crons.TableGameBot {
 
     resetAllBets() {
         this.allBets = {
-            big: 0,
-            small: 0,
-            odd: 0,
-            even: 0,
-            earth: 0,
-            fire: 0,
-            gold: 0,
-            water: 0,
-            wood: 0,
+            bigSmall: {
+                big: 0,
+                small: 0,
+            },
+            oddEven: {
+                even: 0,
+                odd: 0,
+            },
+            redBlack: {
+                red: 0,
+                black: 0,
+            },
+            straightUp: {},
+            split: {},
+            street: {},
+            triangle: {},
+            corner: {},
+            fourNumbers: {},
+            column: {},
+            line: {},
+            dozen: {},
         };
 
         this.smallTickets = 0;
@@ -139,7 +149,11 @@ export default class KenoProMaxBot extends Table.Crons.TableGameBot {
 
     getAllBetAmount() {
         let total = 0;
-        this.definition.choices.forEach((choice) => (total += this.allBets[choice]));
+
+        betTypeKeys.forEach((betType) => {
+            let betTypeObj = amountOnChoices[betType];
+            Object.keys(betTypeObj).forEach((betChoice) => (total += betTypeObj[betChoice]));
+        });
 
         return total;
     }

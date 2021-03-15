@@ -1,4 +1,5 @@
-import { KenoProMaxBets, KenoProMaxTmpBets } from "./keno-pro-max-bets";
-import KenoProMaxRounds from "./keno-pro-max-rounds";
+import { RouletteBets, RouletteTmpBets } from "./roulette-bets";
+import RouletteRounds from "./roulette-rounds";
+import RouletteBetLogs from "./roulette-bet-logs";
 
-export { KenoProMaxBets, KenoProMaxTmpBets, KenoProMaxRounds };
+export { RouletteBets, RouletteTmpBets, RouletteRounds, RouletteBetLogs };

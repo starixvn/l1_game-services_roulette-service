@@ -42,7 +42,7 @@ export default {
     },
     sentry: {
         sentryUrl: "http://2bc909c5b3b9472e99400a6e41624e0b@sentry.sabagame.com/131",
-        logIdentifier: "kenopromax",
+        logIdentifier: "roulette",
         env: "PROD",
     },
     authenticateSettings: {

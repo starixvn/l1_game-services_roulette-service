@@ -1,13 +1,19 @@
+import { ChoiceHelper } from "./helpers";
+
 export default {
-    id: 8,
-    name: "KenoProMax",
+    id: 21,
+    name: "Roulette",
     durations: {
-        wholeRound: 39,
-        placingBets: 30,
+        wholeRound: 59,
+        placingBets: 45,
         lockingBet: 5,
-        shakeThePlateDuration: 2,
+        shakeThePlateDuration: 3,
     },
-    choices: ["big", "small", "odd", "even", "gold", "wood", "water", "fire", "earth"],
-    choicesMapper: { big: 1, small: 2, odd: 3, even: 4, gold: 5, wood: 6, water: 7, fire: 8, earth: 9 },
+    choices: {
+        choicesGroupByNumber: ChoiceHelper.getBetChoicesGroupByNumbers(),
+        choicesGroupByType: ChoiceHelper.getBetChoicesGroupByTypes(),
+    },
+    choicesMapper: {},
     defaultBetTracks: {},
+    numberOfRoundHistory: 300,
 };
