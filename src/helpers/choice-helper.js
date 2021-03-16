@@ -344,12 +344,38 @@ export const getBetChoicesGroupByTypes = () => {
     return result;
 };
 
-export default {
-    quickBets: {
-        zero,
-        voisinsDuZero,
-        tiers,
-        orphelins,
-        neighbors,
-    },
+export const buildBetAmountIncrement = (betChoices) => {
+    const increment = {};
+
+    Object.entries(betChoices).forEach(([typeOfBets, choicesPerType]) => {
+        Object.entries(choicesPerType).forEach(([betChoice, amount]) => {
+            increment[`${typeOfBets}.${betChoice}`] = amount;
+        });
+    });
+
+    return increment;
+};
+
+export const trackBetChoices = (tracks, betChoices, reduce = false) => {
+    Object.entries(betChoices).forEach(([typeOfBets, choicesPerType]) => {
+        const trackChoicesPerType = tracks[typeOfBets] || {};
+
+        Object.entries(choicesPerType).forEach(([betChoice, amount]) => {
+            trackChoicesPerType[betChoice] = reduce
+                ? trackChoicesPerType[betChoice] - amount
+                : (trackChoicesPerType[betChoice] || 0) + amount;
+        });
+
+        if (!tracks[typeOfBets]) {
+            tracks[typeOfBets] = trackChoicesPerType;
+        }
+    });
+};
+
+export const quickBets = {
+    zero,
+    voisinsDuZero,
+    tiers,
+    orphelins,
+    neighbors,
 };

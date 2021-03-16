@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { helpers } from "sc-common";
 import { Core, Table } from "sc-game-base";
-import chance from "chance";
-
+import Chance from "chance";
+import { buildBetAmountIncrement, trackBetChoices, quickBets } from "../helpers/choice-helper";
 import constants from "../constants";
 
 export default class RouletteBot extends Table.Crons.TableGameBot {
@@ -16,6 +16,21 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
     constructor(definition, gameData, publisher, userInfosRepository, tempBetsRepository) {
         super(definition, gameData, publisher, userInfosRepository, tempBetsRepository);
 
+        this.betTypeKeys = [
+            "bigSmall",
+            "oddEven",
+            "redBlack",
+            "straightUp",
+            "split",
+            "street",
+            "triangle",
+            "corner",
+            "fourNumbers",
+            "column",
+            "line",
+            "dozen",
+        ];
+
         this.betChoiceRatio = {
             straightUpSplit: 60,
             others: 40,
@@ -25,6 +40,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
 
         this.smallTicketRatio = 70;
         this.smallTickets = 0;
+        this.defaultBotMaxBet = 500;
         this.resetAllBets();
     }
 
@@ -61,76 +77,160 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         this.smallTickets = 0;
     }
 
-    getBetChoice(bot) {
-        const totalBotBet = this.getAllBetAmount();
+    async placeBet(bot) {
+        const choice = this.getBetChoice(bot);
+        const amount = this.getTotalBetAmount(choice);
 
-        const betChoiceRatios = [
-            {
-                group: this.mainOpts,
-                underBetRatio: (this.getTotalAmountOnChoiceGroup(this.mainOpts) * 100) / totalBotBet < this.betChoiceRatio.MainOpts,
-            },
-            {
-                group: this.subOpts,
-                underBetRatio: (this.getTotalAmountOnChoiceGroup(this.subOpts) * 100) / totalBotBet < this.betChoiceRatio.SubOpts,
-            },
-            {
-                group: this.rareOpts,
-                underBetRatio: (this.getTotalAmountOnChoiceGroup(this.rareOpts) * 100) / totalBotBet < this.betChoiceRatio.RareOpts,
-            },
-        ];
+        if (this.gameData.remainingTime > this.definition.durations.lockingBet) {
+            const currentBet = await this.tempBetsRepository.findOne({ uid: bot.id, phien: this.gameData.roundId }).lean().exec();
+            const totalBetAmount = this.getTotalBetAmount(currentBet);
 
-        const underRatioGroups = helpers.arrayHelper.shuffle(betChoiceRatios.filter((data) => data.underBetRatio));
+            if (totalBetAmount + amount <= this.gameData.gameConfigs.bot_maxbet) {
+                const user = await this.userInfosRepository.findOne({ id: bot.id }, "red").exec();
 
-        const choice =
-            underRatioGroups.length > 0
-                ? this.getRandomChoiceFromGroup(underRatioGroups[0].group)
-                : this.getRandomChoiceFromGroup(this.mainOpts);
+                if (user && user.red > amount) {
+                    user.red -= amount;
 
-        const previousUniqueChoices = bot.choices.filter((betChoice) => this.mainOpts.includes(betChoice));
+                    await user.save();
+                    await this.insertOrUpdateBet(bot, choice, amount, currentBet);
 
-        return previousUniqueChoices.length > 0 ? previousUniqueChoices[0] : choice;
+                    this.totalTickets += 1;
+                    if (this.gameData.players[bot.id]) {
+                        this.gameData.players[bot.id].red = user.red;
+                    }
+
+                    this.updateTotalBetsAndChips(choice, amount);
+                    this.updateBotInRoomData(bot, choice, amount, user.red);
+                    this.publisher.publishToAllUsers(this.generatePlaceBetPayload(bot.id, choice, amount, user.red));
+                }
+            }
+        }
     }
 
-    getMaxBet(bot, choice) {
-        const gameConfigs = this.gameData.gameConfigs;
-        const minBet = this.getMinBet();
-        const isSmallTicket = this.totalTickets === 0 ? true : (this.smallTickets * 100) / this.totalTickets < this.smallTicketRatio;
-        let maxBet = Math.min(gameConfigs.choices_maxbet[choice], gameConfigs.bot_maxbet);
+    generatePlaceBetPayload(playerId, choice, amount, balance) {
+        return {
+            playerChip: { playerId, betChoices: choice, amount, red: balance },
+        };
+    }
 
-        const maxBetOfSmallTicket = Math.min(minBet * 50, maxBet);
+    async insertOrUpdateBet(bot, choice, amount, currentBet) {
+        const existingBetIncrement = { ...buildBetAmountIncrement(choice), totalAmount: amount };
 
-        if (this.rareOpts.includes(choice)) {
-            maxBet = Math.min(minBet * 10, gameConfigs.bot_maxbet * 0.2, gameConfigs.choices_maxbet[choice]);
-            const totalAmountOnRateOpts = this.getTotalAmountOfBotOnChoiceGroup(bot, this.rareOpts);
+        const create = {
+            uid: bot.id,
+            name: bot.name,
+            phien: this.gameData.roundId,
+            time: new Date(),
+        };
 
-            if (totalAmountOnRateOpts > 0) {
-                maxBet -= totalAmountOnRateOpts;
+        await this.tempBetsRepository.updateOne(
+            { uid: bot.id, phien: this.gameData.roundId },
+            { $inc: existingBetIncrement, $setOnInsert: create },
+            { upsert: true, setDefaultsOnInsert: true }
+        );
+    }
+
+    updateTotalBetsAndChips(choice, amount) {
+        const trackTotalBets = this.gameData.totalBets;
+
+        trackBetChoices(trackTotalBets, choice);
+    }
+
+    updateBotInRoomData(bot, choice, amount, balance) {
+        const trackBotChoices = bot.betOnChoices;
+
+        bot.totalBet += amount;
+        bot.choices.push(choice);
+        bot.red = balance;
+        bot.remainTickets--;
+        trackBetChoices(trackBotChoices, choice);
+    }
+
+    getBetChoice(bot) {
+        const chance = new Chance();
+        const randomNumber = chance.integer({ min: constants.numberWheel.min, max: constants.numberWheel.max });
+        const totalBotBet = this.getAllBetAmount();
+        const options = this.definition.choices.choicesGroupByNumber[randomNumber];
+        const betTypes = Object.keys(options).filter((key) => options[key].length > 0);
+        const straightUpAndSplitTotalBet = this.getTotalAmountOnType("straightUp") + this.getTotalAmountOnType("split");
+        const isStraightUpOrSplit =
+            totalBotBet === 0 ? true : (straightUpAndSplitTotalBet * 100) / totalBotBet < this.betChoiceRatios.straightUp;
+
+        let typeChoiceIndex = 0,
+            box = {};
+
+        if (isStraightUpOrSplit) {
+            if (chance.bool({ likelihood: 30 })) {
+                return this.getQuickBets(randomNumber);
+            }
+
+            if (randomNumber !== 0) {
+                typeChoiceIndex = chance.integer({ min: 0, max: 1 });
+            }
+        } else {
+            typeChoiceIndex = chance.integer({ min: 2, max: betTypes.length - 1 });
+        }
+
+        const selectedBetType = betTypes[typeChoiceIndex];
+        const betChoices = options[selectedBetType];
+        let selectedChoice = betChoices[chance.integer({ min: 0, max: betChoices.length - 1 })];
+        box[selectedBetType] = {
+            [selectedChoice]: 0,
+        };
+
+        if (!!bot && bot.choices.length > 0 && this.uniqueBetTypes.some((type) => type == selectedBetType)) {
+            const previousUniqueBox = bot.choices.find((choice) => selectedBetType == Object.keys(choice)[0]);
+
+            if (previousUniqueBox) {
+                box = previousUniqueBox;
+                selectedChoice = Object.keys(previousUniqueBox[selectedBetType])[0];
             }
         }
 
-        if (this.subOpts.includes(choice)) {
-            const totalBetOnSubOpt = this.getTotalAmountOnChoiceGroup(this.subOpts);
+        const betAmount = this.getBetAmount(box);
+        box[selectedBetType][selectedChoice] = betAmount;
 
-            maxBet = isSmallTicket
-                ? Math.min(maxBetOfSmallTicket, gameConfigs.bot_maxbet * 0.2, gameConfigs.choices_maxbet[choice])
-                : Math.min(
-                      gameConfigs.bot_maxbet * 0.5,
-                      (this.getAllBetAmount() * this.betChoiceRatio.SubOpts) / 100 - totalBetOnSubOpt,
-                      gameConfigs.choices_maxbet[choice]
-                  );
-        }
-
-        if (this.mainOpts.includes(choice)) {
-            maxBet = isSmallTicket ? maxBetOfSmallTicket : maxBet;
-        }
-
-        return Math.max(maxBet, minBet);
+        return box;
     }
 
-    getRandomChoiceFromGroup(group) {
-        const randomIndex = (Math.random() * group.length) >> 0;
+    getQuickBets(randomNumber) {
+        const chance = new Chance();
+        const options = Object.values(quickBets);
+        const randomOption = options[chance.integer({ min: 0, max: options.length - 1 })];
+        const betAmount = chance.integer({ min: this.getMinBet(), max: 5 });
 
-        return group[randomIndex];
+        return randomOption(betAmount, randomNumber);
+    }
+
+    getBetAmount(box) {
+        const gameConfigs = this.gameData.gameConfigs;
+        const betTypeChoice = Object.keys(box)[0];
+        const configBetTypeOdds = gameConfigs.odds[betTypeChoice];
+        const configMaxBetType = gameConfigs.choices_maxbet[betTypeChoice];
+        const configBotMaxBet = this.getBotMaxBet();
+        const minBet = this.getMinBet();
+        const random = helpers.numberHelper.getRandomNumberStep5(minBet, configBotMaxBet, true);
+        const betAmount = this.convertAmountToChip(Math.min(Math.round(random / configBetTypeOdds), configMaxBetType));
+
+        return betAmount > minBet ? betAmount : minBet;
+    }
+
+    getBotMaxBet() {
+        const gameConfigs = this.gameData.gameConfigs;
+
+        return gameConfigs && gameConfigs.bot_maxbet > 0 ? gameConfigs.bot_maxbet : this.defaultBotMaxBet;
+    }
+
+    getMinBet() {
+        const gameConfigs = this.gameData.gameConfigs;
+
+        let minBet = 1;
+
+        if (!!gameConfigs && gameConfigs.minbet > 0) {
+            minBet = gameConfigs.minbet;
+        }
+
+        return minBet;
     }
 
     getTotalAmountOnChoiceGroup(choices) {
@@ -150,9 +250,8 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
     getAllBetAmount() {
         let total = 0;
 
-        betTypeKeys.forEach((betType) => {
-            let betTypeObj = amountOnChoices[betType];
-            Object.keys(betTypeObj).forEach((betChoice) => (total += betTypeObj[betChoice]));
+        this.betTypeKeys.forEach((betType) => {
+            total += this.getTotalAmountOnType(betType);
         });
 
         return total;
@@ -162,13 +261,6 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         return amount <= this.getMinBet() * 50;
     }
 
-    updateBotInRoomData(bot, choice, amount, balance) {
-        super.updateBotInRoomData(bot, choice, amount, balance);
-
-        this.allBets[choice] = this.allBets[choice] ? this.allBets[choice] + amount : amount;
-        this.smallTickets += this.isSmallTicket(amount) ? 1 : 0;
-    }
-
     convertAmountToChip(amount) {
         const chipList = constants.chips.filter((chip) => amount % chip === 0);
 
@@ -176,6 +268,26 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
     }
 
     getTotalBetAmount(currentBet) {
-        return currentBet ? this.definition.choices.reduce((total, choice) => total + currentBet[choice], 0) : 0;
+        let total = 0;
+
+        if (currentBet) {
+            const betTypes = Object.values(currentBet);
+            betTypes.forEach((betType) => {
+                Object.values(betType).forEach((value) => (total += value));
+            });
+        }
+
+        return total;
+    }
+
+    getTotalAmountOnType(betType) {
+        let total = 0;
+        let betOnType = this.allBets[betType];
+
+        Object.keys(betOnType).forEach((choice) => {
+            total += betOnType[choice];
+        });
+
+        return total;
     }
 }

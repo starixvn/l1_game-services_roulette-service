@@ -41,7 +41,7 @@ export default {
     },
     sentry: {
         sentryUrl: "http://7bcf75387f74440ca2a41f7dd51a7c7f@sentry.lumigame.com/14",
-        logIdentifier: "kenopromax",
+        logIdentifier: "roulette",
         env: "LOCAL",
     },
     authenticateSettings: {

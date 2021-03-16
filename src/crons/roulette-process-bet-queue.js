@@ -1,4 +1,5 @@
 import { Table } from "sc-game-base";
+import { trackBetChoices, buildBetAmountIncrement } from "../helpers/choice-helper";
 
 export default class ProcessBetQueue extends Table.Crons.TableProcessBetQueue {
     decreaseBetTracks(playerName, bet) {
@@ -16,7 +17,7 @@ export default class ProcessBetQueue extends Table.Crons.TableProcessBetQueue {
             freeBet: bet.freeBet,
         };
         const existingBetFilter = { uid: player.UID, phien: roundId, freeBet: bet.freeBet };
-        const existingBetIncrement = { ...this.buildBetAmountIncrement(bet.betChoices), totalAmount: bet.amount };
+        const existingBetIncrement = { ...buildBetAmountIncrement(bet.betChoices), totalAmount: bet.amount };
 
         if (player.session) {
             newBet.memberId = player.session.memberId;
@@ -51,7 +52,7 @@ export default class ProcessBetQueue extends Table.Crons.TableProcessBetQueue {
     adjustTotalBets(player, bet) {
         const totalBets = this.gameData.totalBets;
 
-        this.trackBetChoices(totalBets, bet.betChoices);
+        trackBetChoices(totalBets, bet.betChoices);
     }
 
     formatApiBetInfo(payload) {
@@ -72,39 +73,11 @@ export default class ProcessBetQueue extends Table.Crons.TableProcessBetQueue {
         return ownBet;
     }
 
-    buildBetAmountIncrement(betChoices) {
-        const increment = {};
-
-        Object.entries(betChoices).forEach(([typeOfBets, choicesPerType]) => {
-            Object.entries(choicesPerType).forEach(([betChoice, amount]) => {
-                increment[`${typeOfBets}.${betChoice}`] = amount;
-            });
-        });
-
-        return increment;
-    }
-
     adjustBetTracks = (playerName, betChoices, reduce = false) => {
         if (this.gameData.ingame?.[playerName]) {
             const betTracks = this.gameData.ingame[playerName];
 
-            this.trackBetChoices(betTracks, betChoices, reduce);
+            trackBetChoices(betTracks, betChoices, reduce);
         }
     };
-
-    trackBetChoices(tracks, betChoices, reduce = false) {
-        Object.entries(betChoices).forEach(([typeOfBets, choicesPerType]) => {
-            const trackChoicesPerType = tracks[typeOfBets] || {};
-
-            Object.entries(choicesPerType).forEach(([betChoice, amount]) => {
-                trackChoicesPerType[betChoice] = reduce
-                    ? trackChoicesPerType[betChoice] - amount
-                    : (trackChoicesPerType[betChoice] || 0) + amount;
-            });
-
-            if (!tracks[typeOfBets]) {
-                tracks[typeOfBets] = trackChoicesPerType;
-            }
-        });
-    }
 }
