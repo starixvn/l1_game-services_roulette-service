@@ -1,5 +1,6 @@
 import { helpers } from "sc-common";
 import { Core } from "sc-game-base";
+import notices from "../constants/notices";
 
 export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
     composeBettingTimeValidationCriteria() {
@@ -39,11 +40,11 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
             },
             {
                 failure: this.anyChoiceExceedItsMaxBet(betChoices, betTracks, configs),
-                notice: helpers.noticeHelper.maxBetOfAnyChoiceReached,
+                notice: notices.maxBetOfAnyChoiceReached,
             },
             {
                 failure: this.anyChoiceNegative(betChoices, betTracks),
-                notice: helpers.noticeHelper.betAmountOfAnyChoiceIncorrect,
+                notice: notices.betAmountOfAnyChoiceIncorrect,
             },
             {
                 failure: totalAmountOfExistingBets + totalAmount < minBet,
@@ -66,7 +67,7 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
         return [
             {
                 failure: this.anyInvalidChoice(betChoices, validChoices),
-                notice: helpers.noticeHelper.invalidBet,
+                notice: notices.invalidBetChoice,
             },
         ];
     }
