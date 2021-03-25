@@ -29,7 +29,7 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
     composeBetAmountValidationCriteria(player, betChoices, totalAmount, freeBet) {
         const configs = this.gameData.gameConfigs;
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
-        const totalAmountOfExistingBets = this.calculateTotalAmount(betTracks) + totalAmount;
+        const totalAmountOfExistingBets = this.calculateTotalAmount(betTracks);
         const minBet = Math.max(player.profile.minBet, configs.minbet);
         const maxBet = Math.min(player.profile.maxBet, configs.maxbet);
 
@@ -136,7 +136,7 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
     }
 
     anyInvalidChoice(betChoices, validBetChoices) {
-        Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
+        return Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
             const validBetChoicesPerType = validBetChoices[typeOfBets];
 
             if (!validBetChoicesPerType) {
@@ -148,7 +148,7 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
     }
 
     anyChoiceExceedItsMaxBet(betChoices, betTracks, configs) {
-        Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
+        return Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
             const maxBetPerChoice = configs.choices_maxbet[typeOfBets] ?? 0;
 
             return Object.entries(choicesPerType).some(([betChoice, amount]) => {
@@ -160,7 +160,7 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
     }
 
     anyChoiceNegative(betChoices, betTracks) {
-        Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
+        return Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
             return Object.entries(choicesPerType).some(([betChoice, amount]) => {
                 const currentBetAmount = betTracks[typeOfBets]?.[betChoice] ?? 0;
 
