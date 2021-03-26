@@ -73,11 +73,11 @@ export default class ProcessBetQueue extends Table.Crons.TableProcessBetQueue {
         return ownBet;
     }
 
-    adjustBetTracks = (playerName, betChoices, reduce = false) => {
+    adjustBetTracks = (playerName, bet, reduce = false) => {
         if (this.gameData.ingame?.[playerName]) {
-            const betTracks = this.gameData.ingame[playerName];
+            const { betTracks } = this.gameData.ingame[playerName];
 
-            trackBetChoices(betTracks, betChoices, reduce);
+            trackBetChoices(betTracks, bet.betChoices, reduce);
         }
     };
 }
