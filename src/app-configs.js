@@ -1,9 +1,9 @@
 export default {
-    hostingPort: 5000,
+    hostingPort: 8003,
     apiSettings: {
         enabledApi: true,
-        apiUrl: "http://l1-api1.lumigame.com",
-        authUrl: "http://l1-auth1.lumigame.com",
+        apiUrl: "http://l2-api.lumigame.com",
+        authUrl: "http://l2-auth.lumigame.com",
         client: {
             id: "game-server",
             secret: "gameserver@20luminet&",
@@ -16,11 +16,12 @@ export default {
     mainServerApiSettings: {
         url: "http://localhost:8080/api",
         auth: {
-            url: "http://l1-auth1.lumigame.com",
+            url: "http://l2-auth.lumigame.com",
             id: "game-services",
             secret: "gameservices@20luminet&",
         },
         requestTimeout: 10000,
+        placeBetTimeout: 4500,
         useAuthenticate: true,
     },
     socketOptions: {
@@ -32,7 +33,7 @@ export default {
     },
     enabledLogs: true,
     database: {
-        url: "mongodb://localhost:27017",
+        url: "mongodb://127.0.0.1:27017",
         options: {
             dbName: "minigame",
             useNewUrlParser: true,
@@ -41,7 +42,7 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "http://7bcf75387f74440ca2a41f7dd51a7c7f@sentry.lumigame.com/14",
+        sentryUrl: "https://5b1908b2cdc3471a8238082527a23379@sentry.lumigame.com/20",
         logIdentifier: "roulette",
         env: "DEV",
     },
@@ -49,6 +50,6 @@ export default {
         audiences: ["api", "admin-api"],
     },
     adminSecretKey: "asWDEerfOIdgsdqRTFabvmgh",
-    enableCorsWs: false,
-    corsUrls: ["http://localhost:7456", "http://localhost:7000", "http://games.lumigame.com", "http://admin.lumigame.com"],
+    enableCorsWs: true,
+    corsUrls: ["http://localhost:7456", "http://l2-games.lumigame.com", "http://l2-admin2.lumigame.com", "http://localhost:7000"],
 };

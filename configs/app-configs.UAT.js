@@ -2,8 +2,8 @@ export default {
     hostingPort: 5000,
     apiSettings: {
         enabledApi: true,
-        apiUrl: "http://l1_game_api_uat:5000",
-        authUrl: "http://l1_auth_api_uat:5000",
+        apiUrl: "http://l2_game_api_uat:5000",
+        authUrl: "http://l2_auth_api_uat:5000",
         client: {
             id: "game-server",
             secret: "gameserver@20luminet&",
@@ -14,13 +14,14 @@ export default {
         enabledApiLogs: true,
     },
     mainServerApiSettings: {
-        url: "http://l1_game_server_uat:5000/api",
+        url: "http://l2_game_server_uat:5000/api",
         auth: {
-            url: "http://l1_auth_api_uat:5000",
+            url: "http://l2_auth_api_uat:5000",
             id: "game-services",
             secret: "gameservices@20luminet&",
         },
         requestTimeout: 10000,
+        placeBetTimeout: 4500,
         useAuthenticate: true,
     },
     socketOptions: {
@@ -32,7 +33,7 @@ export default {
     },
     enabledLogs: true,
     database: {
-        url: "mongodb://lmn_backend:LmnBackend%4022027@10.99.99.187:27201/?replicaSet=SabaUAT",
+        url: "mongodb://lmn_backend:LmnBackend%4022027@10.99.99.187:37201/?replicaSet=SabaL2UAT",
         options: {
             dbName: "minigame",
             useNewUrlParser: true,
@@ -41,7 +42,7 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "http://b5074163d9c041c59ed10fe016123051@10.99.99.187:800/254",
+        sentryUrl: "http://dc27b1c71dcb4115bfe7bb40cc015499@10.99.99.187:803/243",
         logIdentifier: "roulette",
         env: "UAT",
     },
@@ -50,5 +51,12 @@ export default {
     },
     adminSecretKey: "asWDEerfOIdgsdqRTFabvmgh",
     enableCorsWs: true,
-    corsUrls: ["http://uat.sabagame.com", "https://uat.sabagame.com", "http://uat-adm.sabagame.com", "https://uat-adm.sabagame.com"],
+    corsUrls: [
+        "https://uat.sabagame.net",
+        "http://uat.sabagame.net",
+        "http://uat-admg.sabagame.net",
+        "https://uat-admg.sabagame.net",
+        "http://uat-adm.sabagame.net",
+        "https://uat-adm.sabagame.net",
+    ],
 };

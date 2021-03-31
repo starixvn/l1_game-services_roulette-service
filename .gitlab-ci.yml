@@ -1,4 +1,4 @@
 include:
-  - project: "ci/repos-ci/pentagon_l1_roulette_service"
+  - project: "ci/repos-ci/pentagon_l2_roulette_service"
     ref: master
     file: "gitlab-ci.yml"
