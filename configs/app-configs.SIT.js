@@ -40,7 +40,7 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "http://077537a7357b4d5c9c55b984621aa14f@sentryuat.sabagame.com/222",
+        sentryUrl: "http://b5074163d9c041c59ed10fe016123051@sentryuat.sabagame.com/254",
         logIdentifier: "roulette",
         env: "SIT",
     },
