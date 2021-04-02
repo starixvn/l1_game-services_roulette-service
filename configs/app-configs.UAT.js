@@ -41,7 +41,7 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "http://b5074163d9c041c59ed10fe016123051@sentryuat.sabagame.com/254",
+        sentryUrl: "http://b5074163d9c041c59ed10fe016123051@10.99.99.187:800/254",
         logIdentifier: "roulette",
         env: "UAT",
     },
