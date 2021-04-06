@@ -210,7 +210,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         const configBotMaxBet = this.getBotMaxBet();
         const minBet = this.getMinBet();
         const random = helpers.numberHelper.getRandomNumberStep5(minBet, configBotMaxBet, true);
-        const betAmount = this.convertAmountToChip(Math.min(Math.round(random / configBetTypeOdds), configMaxBetType));
+        const betAmount = this.convertAmountToChip(Math.min(Math.ceil(random / configBetTypeOdds), configMaxBetType));
 
         return betAmount > minBet ? betAmount : minBet;
     }
