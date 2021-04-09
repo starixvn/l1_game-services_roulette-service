@@ -2,8 +2,8 @@ export default {
     hostingPort: 5000,
     apiSettings: {
         enabledApi: true,
-        apiUrl: "http://l2-api1.lumigame.com",
-        authUrl: "http://l2-auth1.lumigame.com",
+        apiUrl: "http://l2_game_api_local_1:5000",
+        authUrl: "http://l2_auth_api_local_1:5000",
         client: {
             id: "game-server",
             secret: "gameserver@20luminet&",
@@ -14,9 +14,9 @@ export default {
         enabledApiLogs: true,
     },
     mainServerApiSettings: {
-        url: "http://haproxy.lumigame.com:7101/main/api",
+        url: "http://l2_game_server_local_1:5000/api",
         auth: {
-            url: "http://l2-auth1.lumigame.com",
+            url: "http://l2_auth_api_local_1:5000",
             id: "game-services",
             secret: "gameservices@20luminet&",
         },
