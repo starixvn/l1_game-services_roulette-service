@@ -1,6 +1,6 @@
 export default {
     resetTotalBets: { big: 0, small: 0, odd: 0, even: 0, gold: 0, wood: 0, water: 0, fire: 0, earth: 0 },
-    chips: [1000, 500, 200, 100, 50, 10, 5, 1],
+    chips: [20000, 10000, 5000, 1000, 500, 200, 100, 50, 20, 10],
     numberWheel: {
         min: 0,
         max: 36,
