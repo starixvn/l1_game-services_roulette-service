@@ -41,7 +41,7 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "http://dc27b1c71dcb4115bfe7bb40cc015499@10.99.99.187:800/243",
+        sentryUrl: "http://8ac47fca6d3e4a41908896a64ef201ac@10.99.99.187:800/53",
         logIdentifier: "roulette",
         env: "SIT",
     },

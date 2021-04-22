@@ -43,7 +43,7 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "http://afe9a0294f1e43448f71647a4eff2838@10.99.99.187:803/139",
+        sentryUrl: "http://2b5b82bf699543ddb296364568bc30be@10.99.99.187:803/52",
         logIdentifier: "roulette",
         env: "PROD",
     },

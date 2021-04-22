@@ -42,7 +42,7 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "https://5b1908b2cdc3471a8238082527a23379@sentry.lumigame.com/20",
+        sentryUrl: "https://acb36eb835d948d68c1aad9873754d51@sentry.lumigame.com/27",
         logIdentifier: "roulette",
         env: "LOCAL_1",
     },
