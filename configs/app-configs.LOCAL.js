@@ -41,7 +41,7 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "https://7bcf75387f74440ca2a41f7dd51a7c7f@sentry.lumigame.com/14",
+        sentryUrl: "https://13f39b8359404ed5aec23655e64ccf78@sentry.lumigame.com/2",
         logIdentifier: "roulette",
         env: "LOCAL",
     },
