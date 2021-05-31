@@ -56,7 +56,7 @@ export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
             },
             {
                 failure: totalAmountOfExistingBets + totalAmount > maxBet,
-                notice: this.getNoticeObj(helpers.noticeHelper.maxBet, {maxBet}),
+                notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet }),
             },
         ];
     }
