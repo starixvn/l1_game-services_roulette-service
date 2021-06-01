@@ -121,12 +121,13 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
     }
 
     calculateTotalAmount(betChoices) {
-        return Object.values(betChoices).reduce((previousTotalAmount, choicesPerType) => {
+        return Object.entries(betChoices).reduce((previousTotalAmount, [typeOfBets, choicesPerType]) => {
             if (choicesPerType) {
-                const totalAmountPerType = Object.values(choicesPerType).reduce(
-                    (previousTotalAmountPerType, amount) => previousTotalAmountPerType + amount,
-                    0
-                );
+                const totalAmountPerType = Object.entries(choicesPerType).reduce((previousTotalAmountPerType, [betChoice, amount]) => {
+                    betChoices[typeOfBets][betChoice] = amount = amount >> 0;
+
+                    return previousTotalAmountPerType + amount;
+                }, 0);
 
                 return previousTotalAmount + totalAmountPerType;
             }
