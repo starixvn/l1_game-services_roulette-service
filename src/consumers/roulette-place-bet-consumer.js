@@ -39,11 +39,11 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
                 notice: helpers.noticeHelper.invalidBet,
             },
             {
-                failure: this.anyChoiceExceedItsMaxBet(betChoices, betTracks, configs),
+                failure: this.anyChoiceExceedItsMaxBet(betChoices, betTracks, configs, player.profile.maxBet),
                 notice: notices.maxBetOfAnyChoiceReached,
             },
             {
-                failure: this.anyChoiceNegative(betChoices, betTracks),
+                failure: this.anyChoiceBelowMinBet(betChoices, betTracks, minBet),
                 notice: notices.betAmountOfAnyChoiceIncorrect,
             },
             {
@@ -121,12 +121,13 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
     }
 
     calculateTotalAmount(betChoices) {
-        return Object.values(betChoices).reduce((previousTotalAmount, choicesPerType) => {
+        return Object.entries(betChoices).reduce((previousTotalAmount, [typeOfBets, choicesPerType]) => {
             if (choicesPerType) {
-                const totalAmountPerType = Object.values(choicesPerType).reduce(
-                    (previousTotalAmountPerType, amount) => previousTotalAmountPerType + amount,
-                    0
-                );
+                const totalAmountPerType = Object.entries(choicesPerType).reduce((previousTotalAmountPerType, [betChoice, amount]) => {
+                    betChoices[typeOfBets][betChoice] = amount = amount >> 0;
+
+                    return previousTotalAmountPerType + amount;
+                }, 0);
 
                 return previousTotalAmount + totalAmountPerType;
             }
@@ -147,9 +148,9 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
         });
     }
 
-    anyChoiceExceedItsMaxBet(betChoices, betTracks, configs) {
+    anyChoiceExceedItsMaxBet(betChoices, betTracks, configs, userMaxBet) {
         return Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
-            const maxBetPerChoice = configs.choices_maxbet[typeOfBets] ?? 0;
+            const maxBetPerChoice = Math.min(userMaxBet, configs.choices_maxbet[typeOfBets] ?? 0);
 
             return Object.entries(choicesPerType).some(([betChoice, amount]) => {
                 const currentBetAmount = betTracks[typeOfBets]?.[betChoice] ?? 0;
@@ -159,12 +160,12 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
         });
     }
 
-    anyChoiceNegative(betChoices, betTracks) {
+    anyChoiceBelowMinBet(betChoices, betTracks, minBet) {
         return Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
             return Object.entries(choicesPerType).some(([betChoice, amount]) => {
                 const currentBetAmount = betTracks[typeOfBets]?.[betChoice] ?? 0;
 
-                return currentBetAmount + amount <= 0 || amount <= 0;
+                return currentBetAmount + amount < minBet || amount < minBet;
             });
         });
     }
