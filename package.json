@@ -24,7 +24,7 @@
         "nodemon": "^2.0.4",
         "random": "^3.0.3",
         "random-js": "^2.1.0",
-        "sc-game-base": "~1.22.4-beta.6"
+        "sc-game-base": "~1.23.0"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.12.11",
