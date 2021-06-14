@@ -3,6 +3,7 @@ import { Table } from "sc-game-base";
 import constants from "../../constants";
 import gameSettings from "../../game-settings";
 import { generateResult, getSettlementResult } from "../../helpers/result-helper";
+import { helpers } from "sc-common";
 
 const gameConfigs = {
     enabled: true,
@@ -68,5 +69,135 @@ describe("adjustBetTracks test", () => {
 
         consumer.adjustBetTracks("player", bet);
         expect(betTracks).toEqual(expectedBetTracks);
+    });
+});
+
+describe("composeBettingTimeValidationCriteria tests", () => {
+    it("remaining is bigger than place bet time, return result containing cannotPlaceBet", () => {
+        const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        gameData.gameConfigs = gameConfigs;
+        gameData.remainingTime = definition.durations.placingBets + 1;
+        const consumer = initPlaceBetConsumer(definition, gameData);
+
+        const result = consumer.composeBettingTimeValidationCriteria();
+        expect(result).toContainEqual({ failure: true, notice: consumer.getNoticeObj(helpers.noticeHelper.cannotPlaceBet) });
+    });
+
+    it("remaining is less than locking bet time, return result containing  placeBetNextRound", () => {
+        const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        gameData.gameConfigs = gameConfigs;
+        gameData.remainingTime = definition.durations.lockingBet - 1;
+        const consumer = initPlaceBetConsumer(definition, gameData);
+
+        const result = consumer.composeBettingTimeValidationCriteria();
+        expect(result).toContainEqual({ failure: true, notice: consumer.getNoticeObj(helpers.noticeHelper.placeBetNextRound) });
+    });
+});
+
+describe("composeBetAmountValidationCriteria tests", () => {
+    it("valid bet, all criterons has failure = false", () => {
+        const player = {
+            profile: {
+                minBet: 1,
+                maxBet: 2000,
+            },
+        };
+        const betChoices = {
+            straightUp: {
+                10: 100,
+            },
+        };
+        const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        gameData.gameConfigs = gameConfigs;
+
+        const consumer = initPlaceBetConsumer(definition, gameData);
+
+        const result = consumer.composeBetAmountValidationCriteria(player, betChoices, 100, false);
+        expect(result.every((x) => !x.failure)).toBeTrue();
+    });
+
+    it("invalid bet, at least one criterons has failure = true", () => {
+        const player = {
+            profile: {
+                minBet: 1,
+                maxBet: 2000,
+            },
+        };
+        const betChoices = {
+            straightUp: {
+                10: -100,
+            },
+        };
+        const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        gameData.gameConfigs = gameConfigs;
+
+        const consumer = initPlaceBetConsumer(definition, gameData);
+
+        const result = consumer.composeBetAmountValidationCriteria(player, betChoices, -100, false);
+        expect(result.some((x) => x.failure)).toBeTrue();
+    });
+});
+
+describe("consume tests", () => {
+    it("validateBetRequest return true, should push bet to queue", () => {
+        const player = {
+            profile: {
+                name: "player",
+                minBet: 1,
+                maxBet: 2000,
+            },
+            session: {},
+        };
+        const payload = {
+            betChoices: {
+                straightUp: {
+                    10: 100,
+                },
+            },
+        };
+        const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        gameData.gameConfigs = gameConfigs;
+        gameData.remainingTime = definition.durations.placingBets - 1;
+        const publisher = { publishToUser: jest.fn() };
+
+        const consumer = initPlaceBetConsumer(definition, gameData);
+        consumer.publisher = publisher;
+
+        consumer.consume(player, payload);
+        expect(gameData.ingame["player"].betQueue).not.toBeEmpty();
+    });
+
+    it("validateBetRequest return false, should return", () => {
+        const player = {
+            profile: {
+                name: "player",
+                minBet: 1,
+                maxBet: 2000,
+            },
+            session: {},
+        };
+        const payload = {
+            betChoices: {
+                straightUp: {
+                    10: -1,
+                },
+            },
+        };
+        const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        gameData.gameConfigs = gameConfigs;
+        gameData.remainingTime = definition.durations.placingBets - 1;
+        const publisher = { publishToUser: jest.fn() };
+
+        const consumer = initPlaceBetConsumer(definition, gameData);
+        consumer.publisher = publisher;
+
+        consumer.consume(player, payload);
+        expect(gameData.ingame["player"]).toBeUndefined();
     });
 });
