@@ -328,7 +328,7 @@ export const trackBetChoices = (tracks, betChoices, reduce = false) => {
                 ? trackChoicesPerType[betChoice] - amount
                 : (trackChoicesPerType[betChoice] || 0) + amount;
 
-            if (trackChoicesPerType[betChoice] == 0) {
+            if (trackChoicesPerType[betChoice] === 0) {
                 delete trackChoicesPerType[betChoice];
             }
         });
