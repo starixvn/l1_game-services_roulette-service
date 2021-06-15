@@ -2,7 +2,7 @@ import { Table } from "sc-game-base";
 import constants from "../../constants";
 import gameSettings from "../../game-settings";
 import { generateResult, getSettlementResult } from "../../helpers/result-helper";
-import SettleGameRoundConsumer from "../roulette-settle-game-round-consume";
+import SettleGameRoundConsumer from "../roulette-settle-game-round-consumer";
 
 const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
 const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);

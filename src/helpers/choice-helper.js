@@ -247,43 +247,8 @@ const orphelins = (betAmount) => ({
 
 const neighbors = (betAmount, number) => {
     const neighborsArray = [
-        5,
-        24,
-        16,
-        33,
-        1,
-        20,
-        14,
-        31,
-        9,
-        22,
-        18,
-        29,
-        7,
-        28,
-        12,
-        35,
-        3,
-        26,
-        0,
-        32,
-        15,
-        19,
-        4,
-        21,
-        2,
-        25,
-        17,
-        34,
-        6,
-        27,
-        13,
-        36,
-        11,
-        30,
-        8,
-        23,
-        10,
+        5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26, 0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8,
+        23, 10,
     ];
     const length = neighborsArray.length;
 
@@ -335,13 +300,11 @@ export const getBetChoicesGroupByTypes = () => {
         return groupByTypes;
     }, {});
 
-    const result = Object.entries(draftResult).reduce((sortedResult, [type, choices]) => {
+    return Object.entries(draftResult).reduce((sortedResult, [type, choices]) => {
         sortedResult[type] = Array.from(new Set(choices)).sort();
 
         return sortedResult;
     }, {});
-
-    return result;
 };
 
 export const buildBetAmountIncrement = (betChoices) => {

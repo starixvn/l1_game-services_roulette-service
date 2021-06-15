@@ -258,7 +258,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
 
     getTotalAmountOnType(betType) {
         let total = 0;
-        let betOnType = this.allBets[betType];
+        const betOnType = this.allBets[betType];
 
         Object.keys(betOnType).forEach((choice) => {
             total += betOnType[choice];

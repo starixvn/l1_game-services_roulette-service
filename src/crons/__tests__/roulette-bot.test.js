@@ -101,7 +101,7 @@ describe("get bet choice tests", () => {
 describe("getQuickBets tests", () => {
     it("should return quick bet succesfully", () => {
         const bot = new RouletteBot(definition, gameData, publisher, userInfosRepository, tempBetsRepository);
-        const quickBet = bot.getQuickBets();
+        const quickBet = bot.getQuickBets(2);
         expect(quickBet).not.toBeEmpty();
     })
 })

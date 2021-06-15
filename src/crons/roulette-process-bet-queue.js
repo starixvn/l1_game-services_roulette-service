@@ -1,7 +1,7 @@
 import { Table } from "sc-game-base";
 import { trackBetChoices, buildBetAmountIncrement } from "../helpers/choice-helper";
 
-export default class ProcessBetQueue extends Table.Crons.TableProcessBetQueue {
+export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBetQueue {
     decreaseBetTracks(playerName, bet) {
         this.adjustBetTracks(playerName, bet, true);
     }
