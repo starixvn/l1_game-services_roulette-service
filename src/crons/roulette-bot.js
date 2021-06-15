@@ -73,7 +73,6 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
     }
 
     async placeBet(bot) {
-        console.log("lets go")
         const choice = this.getBetChoice(bot);
         const amount = this.getTotalBetAmount(choice);
 
