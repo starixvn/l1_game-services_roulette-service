@@ -1,11 +1,10 @@
 import { Table } from "sc-game-base";
-import constants from "../../constants";
 import gameSettings from "../../game-settings";
 import { generateResult, getSettlementResult } from "../../helpers/result-helper";
-import SettleGameRoundConsumer from "../roulette-settle-game-round-consumer";
+import SettleGameRoundConsumer from "../roulette-settle-game-round-consume";
 
 const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
-const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
 const odds = {
     straightUp: 36,
     split: 18,

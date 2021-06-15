@@ -1,6 +1,5 @@
 import RoulettePlaceBetConsumer from "../roulette-place-bet-consumer";
 import { Table } from "sc-game-base";
-import constants from "../../constants";
 import gameSettings from "../../game-settings";
 import { generateResult, getSettlementResult } from "../../helpers/result-helper";
 import { helpers } from "sc-common";
@@ -31,7 +30,7 @@ function initPlaceBetConsumer(definition, gameData) {
 
 describe("composeBetChoiceValidationCriteria", () => {
     const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
-    const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+    const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
 
     it("invalid bet type - should return true", () => {
         const consumer = initPlaceBetConsumer(definition, gameData);
@@ -61,7 +60,7 @@ describe("adjustBetTracks test", () => {
 
     it.each(testCases)("should update betTracks correctly", (betTracks, bet, expectedBetTracks) => {
         const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
-        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
         gameData.ingame.player = {
             betTracks,
         };
@@ -75,7 +74,7 @@ describe("adjustBetTracks test", () => {
 describe("composeBettingTimeValidationCriteria tests", () => {
     it("remaining is bigger than place bet time, return result containing cannotPlaceBet", () => {
         const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
-        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
         gameData.gameConfigs = gameConfigs;
         gameData.remainingTime = definition.durations.placingBets + 1;
         const consumer = initPlaceBetConsumer(definition, gameData);
@@ -86,7 +85,7 @@ describe("composeBettingTimeValidationCriteria tests", () => {
 
     it("remaining is less than locking bet time, return result containing  placeBetNextRound", () => {
         const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
-        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
         gameData.gameConfigs = gameConfigs;
         gameData.remainingTime = definition.durations.lockingBet - 1;
         const consumer = initPlaceBetConsumer(definition, gameData);
@@ -110,7 +109,7 @@ describe("composeBetAmountValidationCriteria tests", () => {
             },
         };
         const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
-        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
         gameData.gameConfigs = gameConfigs;
 
         const consumer = initPlaceBetConsumer(definition, gameData);
@@ -132,7 +131,7 @@ describe("composeBetAmountValidationCriteria tests", () => {
             },
         };
         const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
-        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
         gameData.gameConfigs = gameConfigs;
 
         const consumer = initPlaceBetConsumer(definition, gameData);
@@ -160,7 +159,7 @@ describe("consume tests", () => {
             },
         };
         const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
-        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
         gameData.gameConfigs = gameConfigs;
         gameData.remainingTime = definition.durations.placingBets - 1;
         const publisher = { publishToUser: jest.fn() };
@@ -189,7 +188,7 @@ describe("consume tests", () => {
             },
         };
         const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
-        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+        const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
         gameData.gameConfigs = gameConfigs;
         gameData.remainingTime = definition.durations.placingBets - 1;
         const publisher = { publishToUser: jest.fn() };
