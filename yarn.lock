@@ -1642,9 +1642,9 @@
     "@types/express-unless" "*"
 
 "@types/express-serve-static-core@^4.17.18":
-  "integrity" "sha512-m4JTwx5RUBNZvky/JJ8swEJPKFd8si08pPF2PfizYjGZOKr/svUWPcoUmLow6MmPzhasphB7gSTINY67xn3JNA=="
-  "resolved" "http://npm.lumigame.com/@types%2fexpress-serve-static-core/-/express-serve-static-core-4.17.18.tgz"
-  "version" "4.17.18"
+  "integrity" "sha512-gwCiEZqW6f7EoR8TTEfalyEhb1zA5jQJnRngr97+3pzMaO1RKoI1w2bw07TK72renMUVWcWS5mLI6rk1NqN0nA=="
+  "resolved" "http://npm.lumigame.com/@types%2fexpress-serve-static-core/-/express-serve-static-core-4.17.21.tgz"
+  "version" "4.17.21"
   dependencies:
     "@types/node" "*"
     "@types/qs" "*"
@@ -1658,9 +1658,9 @@
     "@types/express" "*"
 
 "@types/express@*":
-  "integrity" "sha512-no+R6rW60JEc59977wIxreQVsIEOAYwgCqldrA/vkpCnbD7MqTefO97lmoBe4WE0F156bC4uLSP1XHDOySnChg=="
-  "resolved" "http://npm.lumigame.com/@types%2fexpress/-/express-4.17.11.tgz"
-  "version" "4.17.11"
+  "integrity" "sha512-pTYas6FrP15B1Oa0bkN5tQMNqOcVXa9j4FTFtO8DWI9kppKib+6NJtfTOOLcwxuuYvcX2+dVG6et1SxW/Kc17Q=="
+  "resolved" "http://npm.lumigame.com/@types%2fexpress/-/express-4.17.12.tgz"
+  "version" "4.17.12"
   dependencies:
     "@types/body-parser" "*"
     "@types/express-serve-static-core" "^4.17.18"
@@ -2352,6 +2352,11 @@
   "integrity" "sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA=="
   "resolved" "http://npm.lumigame.com/binary-extensions/-/binary-extensions-2.2.0.tgz"
   "version" "2.2.0"
+
+"bintrees@1.0.1":
+  "integrity" "sha1-DmVcm5wkNeqraL9AJyJtK1WjRSQ="
+  "resolved" "http://npm.lumigame.com/bintrees/-/bintrees-1.0.1.tgz"
+  "version" "1.0.1"
 
 "bl@^2.2.1":
   "integrity" "sha512-6Pesp1w0DEX1N550i/uGV/TqucVL4AM/pgThFSN/Qq9si1/DF9aIHs1BxD8V/QU0HoeHO6cQRTAuYnLPKq1e4g=="
@@ -3169,6 +3174,14 @@
   "resolved" "http://npm.lumigame.com/core-util-is/-/core-util-is-1.0.2.tgz"
   "version" "1.0.2"
 
+"cors@^2.8.5":
+  "integrity" "sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g=="
+  "resolved" "http://npm.lumigame.com/cors/-/cors-2.8.5.tgz"
+  "version" "2.8.5"
+  dependencies:
+    "object-assign" "^4"
+    "vary" "^1"
+
 "cosmiconfig@^6.0.0":
   "integrity" "sha512-xb3ZL6+L8b9JLLCx3ZdoZy4+2ECphCMo2PwqgP1tlfVq6M6YReyzBJtvWWtbDSpNr9hn96pkCiZqUcFEc+54Qg=="
   "resolved" "http://npm.lumigame.com/cosmiconfig/-/cosmiconfig-6.0.0.tgz"
@@ -3953,7 +3966,7 @@
     "jest-message-util" "^26.6.2"
     "jest-regex-util" "^26.0.0"
 
-"express@^4.17.1":
+"express@^4.16.4", "express@^4.17.1":
   "integrity" "sha512-mHJ9O79RqluphRrcw2X/GTh3k9tVv8YcoyY4Kkh4WDMUYKRZUq0h1o0w2rrrxBqM7VoeUVqgb27xlEMXTnYt4g=="
   "resolved" "http://npm.lumigame.com/express/-/express-4.17.1.tgz"
   "version" "4.17.1"
@@ -5920,9 +5933,9 @@
     "jest-cli" "^26.6.3"
 
 "jose@^1.27.1":
-  "integrity" "sha512-JmfDRzt/HSj8ipd9TsDtEHoLUnLYavG+7e8F6s1mx2jfVSfXOTaFQsJUydbjJpTnTDHP1+yKL9Ke7ktS/a0Eiw=="
-  "resolved" "http://npm.lumigame.com/jose/-/jose-1.28.0.tgz"
-  "version" "1.28.0"
+  "integrity" "sha512-6JK28rFu5ENp/yxMwM+iN7YeaInnY9B9Bggjkz5fuwLiJhbVrl2O4SJr65bdNBPl9y27fdC3Mymh+FVCvozLIg=="
+  "resolved" "http://npm.lumigame.com/jose/-/jose-1.28.1.tgz"
+  "version" "1.28.1"
   dependencies:
     "@panva/asn1.js" "^1.0.0"
 
@@ -7486,6 +7499,11 @@
   "resolved" "http://npm.lumigame.com/object-assign/-/object-assign-4.1.1.tgz"
   "version" "4.1.1"
 
+"object-assign@^4":
+  "integrity" "sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM="
+  "resolved" "http://npm.lumigame.com/object-assign/-/object-assign-4.1.1.tgz"
+  "version" "4.1.1"
+
 "object-copy@^0.1.0":
   "integrity" "sha1-fn2Fi3gb18mRpBupde04EnVOmYw="
   "resolved" "http://npm.lumigame.com/object-copy/-/object-copy-0.1.0.tgz"
@@ -8064,6 +8082,13 @@
   "integrity" "sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag=="
   "resolved" "http://npm.lumigame.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz"
   "version" "2.0.1"
+
+"prom-client@^11.2.1":
+  "integrity" "sha512-iz22FmTbtkyL2vt0MdDFY+kWof+S9UB/NACxSn2aJcewtw+EERsen0urSkZ2WrHseNdydsvcxCTAnPcSMZZv4Q=="
+  "resolved" "http://npm.lumigame.com/prom-client/-/prom-client-11.5.3.tgz"
+  "version" "11.5.3"
+  dependencies:
+    "tdigest" "^0.1.1"
 
 "promise-inflight@^1.0.1", "promise-inflight@~1.0.1":
   "integrity" "sha1-mEcocL8igTL8vdhoEputEsPAKeM="
@@ -8893,28 +8918,28 @@
     "axios" "^0.19.2"
     "openid-client" "^3.15.9"
 
-"sc-base-apis@^1.11.1":
-  "integrity" "sha512-34ZE9OaE79Pk6ltwKFG7bewUmLZ5L/8OuxrFb7/Bdq83X+mv2PMRuvfogP51zgyO29nztx/DPD6KA+SDfDaFqg=="
-  "resolved" "http://npm.lumigame.com/sc-base-apis/-/sc-base-apis-1.11.1.tgz"
-  "version" "1.11.1"
+"sc-base-apis@^1.12.0":
+  "integrity" "sha512-M6XbwlOErrpBggQZZKIilmHWbRjE9CeprZF16eGltutZy8WyhCD/PGYFUh5TKbTJqqlLv3eJMLdeklE+ngepMg=="
+  "resolved" "http://npm.lumigame.com/sc-base-apis/-/sc-base-apis-1.12.0.tgz"
+  "version" "1.12.0"
   dependencies:
     "moment" "^2.27.0"
     "sc-api-client" "^1.3.0"
-    "sc-base-database" "^1.8.1"
-    "sc-common" "^1.6.0"
+    "sc-base-database" "^1.8.2"
+    "sc-common" "^1.7.0"
 
-"sc-base-database@^1.8.1":
-  "integrity" "sha512-WBK/i9XauyFeLhOpJFUrJkbr9QrC3mTEEjtWyxEmcvtRZmv4OhmzZ0qugWC7CZDd8HYLL2z2dGFxxkEibaha2Q=="
-  "resolved" "http://npm.lumigame.com/sc-base-database/-/sc-base-database-1.8.1.tgz"
-  "version" "1.8.1"
+"sc-base-database@^1.8.2":
+  "integrity" "sha512-AJMOZbnMjDlI9vL0bpiG93eR4krGaXp05JdUnvJ2andLU+T/Zpo3ZzIwBbbkA6jGSfNfJ4374Vxe9kFyk24jsQ=="
+  "resolved" "http://npm.lumigame.com/sc-base-database/-/sc-base-database-1.8.2.tgz"
+  "version" "1.8.2"
   dependencies:
     "mongoose" "^5.9.25"
     "sc-common" "^1.6.0"
 
-"sc-common@^1.6.0":
-  "integrity" "sha512-ZZrcVYzgowulytqyCdjUb3uUsBe/YWhV4RqDN6IK1aYhC0RGfFRyYqR9whuRaSar0Hw9RggXwC3Aw1XIES5p2A=="
-  "resolved" "http://npm.lumigame.com/sc-common/-/sc-common-1.6.0.tgz"
-  "version" "1.6.0"
+"sc-common@^1.6.0", "sc-common@^1.7.0":
+  "integrity" "sha512-+bgvCtmo06YMkGfAruAht9oePO3R48Lzzncz2slGGSsPAzAjh7lMezjB4uOoH/aDR7dOGY2CwKpmAvfeFpkxqQ=="
+  "resolved" "http://npm.lumigame.com/sc-common/-/sc-common-1.7.0.tgz"
+  "version" "1.7.0"
   dependencies:
     "@sentry/node" "^5.19.1"
     "jsonwebtoken" "^8.5.1"
@@ -8922,15 +8947,16 @@
     "mongoose-long" "^0.3.0"
     "numeral" "^2.0.6"
 
-"sc-game-base@1.20.3":
-  "integrity" "sha512-BKZ2yZTtXS5vNjppSIxouFjdnWarbYxRGIeHgyEiLtzSqQ2F5jPbQDv+Sb/+KzCN012XOcmu3mamX6yUQiPFhA=="
-  "resolved" "http://npm.lumigame.com/sc-game-base/-/sc-game-base-1.20.3.tgz"
-  "version" "1.20.3"
+"sc-game-base@~1.23.0":
+  "integrity" "sha512-q/OWwYjCKN9x065KdVgRKAEiFixG/gVVHgLAfckDIcfbHVqt+a5aJ1k3ktCIQXkz28wdjUw/CTW7uUoEL/jt3g=="
+  "resolved" "http://npm.lumigame.com/sc-game-base/-/sc-game-base-1.23.0.tgz"
+  "version" "1.23.0"
   dependencies:
     "awilix" "^4.3.1"
     "axios" "^0.20.0"
     "body-parser" "^1.19.0"
     "chance" "^1.1.7"
+    "cors" "^2.8.5"
     "cron" "^1.8.2"
     "express" "^4.17.1"
     "helmet" "^3.23.3"
@@ -8938,10 +8964,11 @@
     "mongoose" "^5.9.25"
     "morgan" "^1.10.0"
     "openid-client" "^4.2.0"
-    "sc-base-apis" "^1.11.1"
-    "sc-base-database" "^1.8.1"
-    "sc-common" "^1.6.0"
+    "sc-base-apis" "^1.12.0"
+    "sc-base-database" "^1.8.2"
+    "sc-common" "^1.7.0"
     "socket.io" "^2.3.0"
+    "socket.io-prometheus-metrics" "^1.0.6"
 
 "sc-semantic-release@^1.1.0":
   "integrity" "sha512-izZqZiS8hL05cGzYbcR3+GZ1Oktr9rU1nIL05S9mZnEBm5nZfqzRkSpR2OHVJARjYsMI5dps0oUX1HjFV9x47w=="
@@ -9259,7 +9286,16 @@
     "debug" "~4.1.0"
     "isarray" "2.0.1"
 
-"socket.io@^2.3.0":
+"socket.io-prometheus-metrics@^1.0.6":
+  "integrity" "sha512-rG1XIWuFRysVE/VE2ikJcYbv1ZqcY5IZ5CJOoih2MMiVx7GujwvxF1olcpDlQ/iGGryCXC/FRoBAB00Qnzsntw=="
+  "resolved" "http://npm.lumigame.com/socket.io-prometheus-metrics/-/socket.io-prometheus-metrics-1.0.6.tgz"
+  "version" "1.0.6"
+  dependencies:
+    "express" "^4.16.4"
+    "prom-client" "^11.2.1"
+    "socket.io" "^2.2.0"
+
+"socket.io@^2.2.0", "socket.io@^2.3.0":
   "integrity" "sha512-Si18v0mMXGAqLqCVpTxBa8MGqriHGQh8ccEOhmsmNS3thNCGBwO8WGrwMibANsWtQQ5NStdZwHqZR3naJVFc3w=="
   "resolved" "http://npm.lumigame.com/socket.io/-/socket.io-2.4.1.tgz"
   "version" "2.4.1"
@@ -9685,6 +9721,13 @@
     "mkdirp" "^0.5.0"
     "safe-buffer" "^5.1.2"
     "yallist" "^3.0.3"
+
+"tdigest@^0.1.1":
+  "integrity" "sha1-Ljyyw56kSeVdHmzZEReszKRYgCE="
+  "resolved" "http://npm.lumigame.com/tdigest/-/tdigest-0.1.1.tgz"
+  "version" "0.1.1"
+  dependencies:
+    "bintrees" "1.0.1"
 
 "temp-dir@^2.0.0":
   "integrity" "sha512-aoBAniQmmwtcKp/7BzsH8Cxzv8OL736p7v1ihGb5e9DJ9kTwGWHrQrVB5+lfVDzfGrdRzXch+ig7LHaY1JTOrg=="
@@ -10227,7 +10270,7 @@
   dependencies:
     "builtins" "^1.0.3"
 
-"vary@~1.1.2":
+"vary@^1", "vary@~1.1.2":
   "integrity" "sha1-IpnwLG3tMNSllhsLn3RSShj2NPw="
   "resolved" "http://npm.lumigame.com/vary/-/vary-1.1.2.tgz"
   "version" "1.1.2"
