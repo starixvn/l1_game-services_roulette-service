@@ -1,8 +1,8 @@
 import { helpers } from "sc-common";
-import { Core } from "sc-game-base";
+import { PlaceBetConsumer } from "sc-game-base/src/core/event-consumers";
 import notices from "../constants/notices";
 
-export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.PlaceBetConsumer {
+export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
     composeBettingTimeValidationCriteria() {
         const configs = this.gameData.gameConfigs;
         const shakeThePlateTime = this.definition.durations.placingBets + this.definition.durations.shakeThePlateDuration;
@@ -10,18 +10,18 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
         return [
             {
                 failure: !configs.enabled,
-                notice: helpers.noticeHelper.placeBetNextRound,
+                notice: this.getNoticeObj(helpers.noticeHelper.placeBetNextRound),
             },
             {
                 failure:
                     this.gameData.remainingTime >= this.definition.durations.placingBets &&
                     this.gameData.remainingTime <= shakeThePlateTime,
-                notice: helpers.noticeHelper.cannotPlaceBet,
+                notice: this.getNoticeObj(helpers.noticeHelper.cannotPlaceBet),
             },
             {
                 failure:
                     this.gameData.remainingTime < this.definition.durations.lockingBet || this.gameData.remainingTime > shakeThePlateTime,
-                notice: helpers.noticeHelper.placeBetNextRound,
+                notice: this.getNoticeObj(helpers.noticeHelper.placeBetNextRound),
             },
         ];
     }
@@ -36,27 +36,27 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
         return [
             {
                 failure: freeBet && !configs.enableFreeBet,
-                notice: helpers.noticeHelper.invalidBet,
+                notice: this.getNoticeObj(helpers.noticeHelper.invalidBet),
             },
             {
-                failure: this.anyChoiceExceedItsMaxBet(betChoices, betTracks, configs),
-                notice: notices.maxBetOfAnyChoiceReached,
+                failure: this.anyChoiceExceedItsMaxBet(betChoices, betTracks, configs, player.profile.maxBet),
+                notice: this.getNoticeObj(notices.maxBetOfAnyChoiceReached),
             },
             {
-                failure: this.anyChoiceNegative(betChoices, betTracks),
-                notice: notices.betAmountOfAnyChoiceIncorrect,
+                failure: this.anyChoiceBelowMinBet(betChoices, betTracks, minBet),
+                notice: this.getNoticeObj(notices.betAmountOfAnyChoiceIncorrect),
             },
             {
                 failure: totalAmountOfExistingBets + totalAmount < minBet,
-                notice: helpers.noticeHelper.minBet(minBet),
+                notice: this.getNoticeObj(helpers.noticeHelper.minBet, { minBet }),
             },
             {
                 failure: totalAmount > maxBet,
-                notice: helpers.noticeHelper.maxBet(maxBet),
+                notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet }),
             },
             {
                 failure: totalAmountOfExistingBets + totalAmount > maxBet,
-                notice: helpers.noticeHelper.maxBet(maxBet),
+                notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet }),
             },
         ];
     }
@@ -67,7 +67,7 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
         return [
             {
                 failure: this.anyInvalidChoice(betChoices, validChoices),
-                notice: notices.invalidBetChoice,
+                notice: this.getNoticeObj(notices.invalidBetChoice),
             },
         ];
     }
@@ -121,12 +121,13 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
     }
 
     calculateTotalAmount(betChoices) {
-        return Object.values(betChoices).reduce((previousTotalAmount, choicesPerType) => {
+        return Object.entries(betChoices).reduce((previousTotalAmount, [typeOfBets, choicesPerType]) => {
             if (choicesPerType) {
-                const totalAmountPerType = Object.values(choicesPerType).reduce(
-                    (previousTotalAmountPerType, amount) => previousTotalAmountPerType + amount,
-                    0
-                );
+                const totalAmountPerType = Object.entries(choicesPerType).reduce((previousTotalAmountPerType, [betChoice, amount]) => {
+                    betChoices[typeOfBets][betChoice] = amount = amount >> 0;
+
+                    return previousTotalAmountPerType + amount;
+                }, 0);
 
                 return previousTotalAmount + totalAmountPerType;
             }
@@ -147,9 +148,9 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
         });
     }
 
-    anyChoiceExceedItsMaxBet(betChoices, betTracks, configs) {
+    anyChoiceExceedItsMaxBet(betChoices, betTracks, configs, userMaxBet) {
         return Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
-            const maxBetPerChoice = configs.choices_maxbet[typeOfBets] ?? 0;
+            const maxBetPerChoice = Math.min(userMaxBet, configs.choices_maxbet[typeOfBets] ?? 0);
 
             return Object.entries(choicesPerType).some(([betChoice, amount]) => {
                 const currentBetAmount = betTracks[typeOfBets]?.[betChoice] ?? 0;
@@ -159,12 +160,12 @@ export default class RoulettePlaceBetConsumer extends Core.BaseEventConsumers.Pl
         });
     }
 
-    anyChoiceNegative(betChoices, betTracks) {
+    anyChoiceBelowMinBet(betChoices, betTracks, minBet) {
         return Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
             return Object.entries(choicesPerType).some(([betChoice, amount]) => {
                 const currentBetAmount = betTracks[typeOfBets]?.[betChoice] ?? 0;
 
-                return currentBetAmount + amount <= 0 || amount <= 0;
+                return currentBetAmount + amount < minBet || amount < minBet;
             });
         });
     }
