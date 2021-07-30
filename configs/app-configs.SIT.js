@@ -51,11 +51,12 @@ export default {
     adminSecretKey: "asWDEerfOIdgsdqRTFabvmgh",
     enableCorsWs: true,
     corsUrls: [
-        "https://sit.sabagame.net",
-        "http://sit.sabagame.net",
-        "http://sit-admg.sabagame.net",
-        "https://sit-admg.sabagame.net",
-        "http://sit-adm.sabagame.net",
-        "https://sit-adm.sabagame.net",
+        "http://sit.v-gaming.net",
+        "https://sit.v-gaming.net",
+        "https://sit-admg.v-gaming.net",
+        "http://sitadm.v-gaming.net",
+        "https://sitadm.v-gaming.net",
+        "http://msit.v-gaming.net",
+        "https://msit.v-gaming.net",
     ],
 };
