@@ -41,7 +41,7 @@ export default {
         },
     },
     sentry: {
-        sentryUrl: "http://52368c4019044019885440599c180bda@sentry_web_uat:9000/24",
+        sentryUrl: "http://52368c4019044019885440599c180bda@10.2.189.51:9000/24",
         logIdentifier: "roulette",
         env: "UAT",
     },
