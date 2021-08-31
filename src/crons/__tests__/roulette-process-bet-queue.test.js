@@ -1,10 +1,12 @@
 import { stub, stubMongooseModelStupidly } from "jest-micro-auto-stub";
 import mongoose from "mongoose";
 import logger from "sc-common/logger";
-import ProcessBetQueue from "../roulette-process-bet-queue";
-import gameSettings from "../../game-settings";
-import { PlaceBetPublisher } from "sc-game-base/src/core/event-publishers";
 import { Table } from "sc-game-base";
+import { BaseMetrics } from "sc-game-base/src/core/base-metrics";
+import { PlaceBetPublisher } from "sc-game-base/src/core/event-publishers";
+
+import gameSettings from "../../game-settings";
+import ProcessBetQueue from "../roulette-process-bet-queue";
 
 jest.mock("sc-game-base/src/core/event-publishers");
 
@@ -47,7 +49,7 @@ const userInfosRepository = stubMongooseModelStupidly(mongoose.Model);
 userInfosRepository.updateOne = jest.fn();
 
 const placeBet = jest.fn();
-const validateBalance = jest.fn();
+const baseMetrics = stub(BaseMetrics);
 
 beforeEach(() => {
     gameData.ingame = {
@@ -60,8 +62,8 @@ beforeEach(() => {
 });
 
 describe("proceedBet error tests", () => {
-    it("validateBalance api return insufficientBalance, should decrease betTrack", async () => {
-        validateBalance.mockReturnValueOnce({
+    it("placeBet api return insufficientBalance, should decrease betTrack", async () => {
+        placeBet.mockReturnValueOnce({
             isOk: false,
             response: {
                 inSufficientBalance: true,
@@ -76,8 +78,8 @@ describe("proceedBet error tests", () => {
         expect(betTracks.straightUp[10]).toEqual(100);
     });
 
-    it("validateBalance api return kickedOut, should call handleFailedBet,  should decrease betTrack", async () => {
-        validateBalance.mockReturnValueOnce({
+    it("placeBet api return kickedOut, should call handleFailedBet,  should decrease betTrack", async () => {
+        placeBet.mockReturnValueOnce({
             isOk: false,
             response: {
                 kickedOut: true,
@@ -97,7 +99,6 @@ describe("proceedBet error tests", () => {
     });
 });
 
-
 describe("successful bet tests", () => {
     beforeEach(() => {
         gameData.roundId = 1;
@@ -105,7 +106,6 @@ describe("successful bet tests", () => {
 
     it("place bet successfully, insert new betlog, upsert bet, update total bet and call notifyPlacingBetResult", async () => {
         placeBet.mockReturnValueOnce({ isOk: true, response: {} });
-        validateBalance.mockReturnValueOnce({ isOk: true, response: {} });
         const proceedBetQueue = initBetQueue();
 
         const player = mockPlayer();
@@ -131,7 +131,7 @@ const initBetQueue = () => {
         betsRepository,
         betLogsRepository,
         userInfosRepository,
-        validateBalance,
+        baseMetrics,
     });
 };
 
