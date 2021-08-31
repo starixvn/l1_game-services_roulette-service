@@ -50,5 +50,14 @@ export default {
     },
     adminSecretKey: "asWDEerfOIdgsdqRTFabvmgh",
     enableCorsWs: true,
-    corsUrls: ["http://uat.sabagame.com", "https://uat.sabagame.com", "http://uat-adm.sabagame.com", "https://uat-adm.sabagame.com"],
+    corsUrls: [
+        "http://l1uat.sgamesuat.com",
+        "https://l1uat.sgamesuat.com",
+        "http://l1uatadm.sgamesuat.com",
+        "https://l1uatadm.sgamesuat.com",
+    ],
+    metrics: {
+        enable: true,
+        secretKey: "6c1f0f28-70f2-46ae-b031-22624a6cd8df",
+    },
 };
