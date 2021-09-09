@@ -51,12 +51,12 @@ export default {
     adminSecretKey: "asWDEerfOIdgsdqRTFabvmgh",
     enableCorsWs: true,
     corsUrls: [
-        "http://l2sit.sgamesuat.net",
-        "https://l2sit.sgamesuat.net",
-        "http://l2sitadm.sgamesuat.net",
-        "https://l2sitadm.sgamesuat.net",
-        "http://l2sitm.sgamesuat.net",
-        "https://l2sitm.sgamesuat.net",
+        "http://l2sit.sgamesuat.com",
+        "https://l2sit.sgamesuat.com",
+        "http://l2sitadm.sgamesuat.com",
+        "https://l2sitadm.sgamesuat.com",
+        "http://l2sitm.sgamesuat.com",
+        "https://l2sitm.sgamesuat.com",
     ],
     metrics: {
         enable: true,
