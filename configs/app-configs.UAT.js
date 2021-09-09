@@ -52,12 +52,12 @@ export default {
     adminSecretKey: "asWDEerfOIdgsdqRTFabvmgh",
     enableCorsWs: true,
     corsUrls: [
-        "http://uat.v-gaming.net",
-        "https://uat.v-gaming.net",
-        "http://uatadm.v-gaming.net",
-        "https://uatadm.v-gaming.net",
-        "http://muat.v-gaming.net",
-        "https://muat.v-gaming.net",
+        "http://l2uat.sgamesuat.net",
+        "https://l2uat.sgamesuat.net",
+        "http://l2uatadm.sgamesuat.net",
+        "https://l2uatadm.sgamesuat.net",
+        "http://l2uatm.sgamesuat.net",
+        "https://l2uatm.sgamesuat.net",
     ],
     metrics: {
         enable: true,
