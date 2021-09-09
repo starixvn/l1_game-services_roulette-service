@@ -59,4 +59,8 @@ export default {
         "http://msit.v-gaming.net",
         "https://msit.v-gaming.net",
     ],
+    metrics: {
+        enable: true,
+        secretKey: "6c1f0f28-70f2-46ae-b031-22624a6cd8df",
+    },
 };

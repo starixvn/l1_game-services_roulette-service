@@ -3,9 +3,10 @@ import randomLib1 from "random";
 import { Random, MersenneTwister19937 } from "random-js";
 import Constants from "../constants";
 import { ChoiceHelper } from "../helpers";
+import { randomInt } from "crypto";
 
 function random1(min, max) {
-    return Math.floor(Math.random() * max) + min;
+    return randomInt(min, max);
 }
 
 function random2(min, max) {
@@ -30,8 +31,8 @@ function random5(min, max) {
 const randomFunctions = [random1, random2, random3, random4, random5];
 
 export const generateResult = () => {
-    const selectedRandomMethodIndex = Math.floor(Math.random() * (randomFunctions.length - 1));
-    const randomFunction = randomFunctions[selectedRandomMethodIndex];
+    const chance = new Chance();
+    const randomFunction = chance.pickone(randomFunctions);
 
     return randomFunction(Constants.numberWheel.min, Constants.numberWheel.max);
 };
