@@ -1,6 +1,6 @@
 import { Table } from "sc-game-base";
 
-export default class SettleGameRoundConsumer extends Table.EventConsumers.TableSettleGameRoundConsumer {
+export default class RouletteSettleGameRoundConsumer extends Table.EventConsumers.TableSettleGameRoundConsumer {
     calculateBetResult(settlementResult, bet, odds, roundResult) {
         const betResult = Object.entries(settlementResult).reduce(
             (result, [typeOfBets, winningChoices]) => {

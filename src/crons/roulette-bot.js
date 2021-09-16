@@ -31,15 +31,12 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
             "dozen",
         ];
 
-        this.betChoiceRatio = {
+        this.betChoiceRatios = {
             straightUpSplit: 60,
             others: 40,
         };
 
         this.uniqueBetTypes = ["bigSmall", "redBlack", "oddEven"];
-
-        this.smallTicketRatio = 70;
-        this.smallTickets = 0;
         this.defaultBotMaxBet = 500;
         this.resetAllBets();
     }
@@ -73,8 +70,6 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
             line: {},
             dozen: {},
         };
-
-        this.smallTickets = 0;
     }
 
     async placeBet(bot) {
@@ -86,12 +81,11 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
             const totalBetAmount = this.getTotalBetAmount(currentBet);
 
             if (totalBetAmount + amount <= this.gameData.gameConfigs.bot_maxbet) {
-                const user = await this.userInfosRepository.findOne({ id: bot.id }, "red").exec();
+                const user = await this.userInfosRepository
+                    .findOneAndUpdate({ id: bot.id, red: { $gt: amount } }, { $inc: { red: -amount } }, { new: true })
+                    .lean();
 
-                if (user && user.red > amount) {
-                    user.red -= amount;
-
-                    await user.save();
+                if (user) {
                     await this.insertOrUpdateBet(bot, choice, amount, currentBet);
 
                     this.totalTickets += 1;
@@ -178,8 +172,8 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
             [selectedChoice]: 0,
         };
 
-        if (!!bot && bot.choices.length > 0 && this.uniqueBetTypes.some((type) => type == selectedBetType)) {
-            const previousUniqueBox = bot.choices.find((choice) => selectedBetType == Object.keys(choice)[0]);
+        if (!!bot && bot.choices.length > 0 && this.uniqueBetTypes.some((type) => type === selectedBetType)) {
+            const previousUniqueBox = bot.choices.find((choice) => selectedBetType === Object.keys(choice)[0]);
 
             if (previousUniqueBox) {
                 box = previousUniqueBox;
@@ -233,20 +227,6 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         return minBet;
     }
 
-    getTotalAmountOnChoiceGroup(choices) {
-        let total = 0;
-        choices.forEach((choice) => (total += this.allBets[choice]));
-
-        return total;
-    }
-
-    getTotalAmountOfBotOnChoiceGroup(bot, choices) {
-        let total = 0;
-        choices.forEach((choice) => (total += bot.betOnChoices[choice]));
-
-        return total;
-    }
-
     getAllBetAmount() {
         let total = 0;
 
@@ -255,10 +235,6 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         });
 
         return total;
-    }
-
-    isSmallTicket(amount) {
-        return amount <= this.getMinBet() * 50;
     }
 
     convertAmountToChip(amount) {
@@ -282,7 +258,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
 
     getTotalAmountOnType(betType) {
         let total = 0;
-        let betOnType = this.allBets[betType];
+        const betOnType = this.allBets[betType];
 
         Object.keys(betOnType).forEach((choice) => {
             total += betOnType[choice];

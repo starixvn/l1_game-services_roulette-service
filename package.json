@@ -1,5 +1,5 @@
 {
-    "name": "sc1-keno-pro-max-service",
+    "name": "roulette-service",
     "version": "1.0.0",
     "description": "",
     "main": "./src/app.js",
@@ -24,7 +24,7 @@
         "nodemon": "^2.0.4",
         "random": "^3.0.3",
         "random-js": "^2.1.0",
-        "sc-game-base": "~1.23.0"
+        "sc-game-base": "~1.24.1"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.12.11",
