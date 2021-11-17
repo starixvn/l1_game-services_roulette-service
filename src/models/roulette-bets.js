@@ -27,6 +27,10 @@ const schema = new mongoose.Schema({
     memberId: { type: Number },
     siteId: { type: String },
     freeBet: { type: Boolean, default: false },
+
+    currency: { type: String, require: true },
+    rate: { type: Number, require: true },
+    partnerId: { type: String, require: true },
 });
 
 const bets = mongoose.model("Roulette_one", schema);
