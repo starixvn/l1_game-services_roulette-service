@@ -127,7 +127,25 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
     updateTotalBetsAndChips(choice, amount) {
         const trackTotalBets = this.gameData.totalBets;
 
-        trackBetChoices(trackTotalBets, choice);
+        trackBetChoices(trackTotalBets, choice, this.botRate);
+
+        if (!this.gameData.chips[this.botRate]) {
+            this.gameData.chips[this.botRate] = {};
+        }
+
+        const chipBotRate = this.gameData.chips[this.botRate];
+
+        Object.entries(choice).forEach(([typeOfBets, choicesPerType]) => {
+            if (!chipBotRate[typeOfBets]) {
+                chipBotRate[typeOfBets] = {};
+            }
+            const trackChoicesPerType = chipBotRate[typeOfBets];
+
+            Object.entries(choicesPerType).forEach(([betChoice, choiceAmount]) => {
+                trackChoicesPerType[betChoice] = trackChoicesPerType[betChoice] ?? {};
+                trackChoicesPerType[betChoice][choiceAmount] = (trackChoicesPerType[betChoice][choiceAmount] || 0) + 1;
+            });
+        });
     }
 
     updateBotInRoomData(bot, choice, amount, balance) {
@@ -137,7 +155,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         bot.choices.push(choice);
         bot.red = balance;
         bot.remainTickets--;
-        trackBetChoices(trackBotChoices, choice);
+        trackBetChoices(trackBotChoices, choice, this.botRate);
     }
 
     getBetChoice(bot) {
