@@ -3,10 +3,9 @@ import randomLib1 from "random";
 import { Random, MersenneTwister19937 } from "random-js";
 import Constants from "../constants";
 import { ChoiceHelper } from "../helpers";
-import { randomInt } from "crypto";
 
 function random1(min, max) {
-    return randomInt(min, max);
+    return Math.floor(Math.random() * max) + min;
 }
 
 function random2(min, max) {
