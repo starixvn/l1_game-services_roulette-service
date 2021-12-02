@@ -31,8 +31,8 @@ export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
         const configs = this.gameData.gameConfigs;
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
         const totalAmountOfExistingBets = this.calculateTotalAmount(betTracks);
-        const minBet = Math.max(player.profile.minBet, settings.minbet);
-        const maxBet = Math.min(player.profile.maxBet, settings.maxbet);
+        const minBet = Math.max(player.profile.minBet, settings.minBet);
+        const maxBet = Math.min(player.profile.maxBet, settings.maxBet);
 
         return [
             {

@@ -6,8 +6,8 @@ import { helpers } from "sc-common";
 
 const currencyGroupGame = {
     enabled: true,
-    minbet: 1,
-    maxbet: 2000,
+    minBet: 1,
+    maxBet: 2000,
     maxBetPerChoices: {
         straightUp: 200,
         split: 400,
