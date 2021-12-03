@@ -1,3 +1,6 @@
+variables:
+  SMOKE_PRODUCT_NAME: Roulette
+
 include:
   - project: "ci/repos-ci/pentagon_l1_roulette_service"
     ref: master
