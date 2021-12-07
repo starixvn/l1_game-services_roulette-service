@@ -319,14 +319,14 @@ export const buildBetAmountIncrement = (betChoices) => {
     return increment;
 };
 
-export const trackBetChoices = (tracks, betChoices, reduce = false) => {
+export const trackBetChoices = (tracks, betChoices, rate, reduce = false) => {
     Object.entries(betChoices).forEach(([typeOfBets, choicesPerType]) => {
         const trackChoicesPerType = tracks[typeOfBets] || {};
 
         Object.entries(choicesPerType).forEach(([betChoice, amount]) => {
             trackChoicesPerType[betChoice] = reduce
-                ? trackChoicesPerType[betChoice] - amount
-                : (trackChoicesPerType[betChoice] || 0) + amount;
+                ? trackChoicesPerType[betChoice] - amount * rate
+                : (trackChoicesPerType[betChoice] || 0) + amount * rate;
 
             if (trackChoicesPerType[betChoice] === 0) {
                 delete trackChoicesPerType[betChoice];
