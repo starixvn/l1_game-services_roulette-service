@@ -6,7 +6,7 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
         this.adjustBetTracks(playerName, bet, true);
     }
 
-    async upsertBet(player, roundId, bet) {
+    async upsertBet(player, roundId, bet, rate) {
         const configs = this.gameData.gameConfigs;
         const newBet = {
             uid: player.UID,
@@ -22,6 +22,9 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
         if (player.session) {
             newBet.memberId = player.session.memberId;
             newBet.siteId = player.session.siteId;
+            newBet.partnerId = player.session.partnerId;
+            newBet.currency = player.session.currencyName;
+            newBet.rate = rate;
         }
 
         await this.betsRepository.updateOne(
@@ -31,7 +34,7 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
         );
     }
 
-    async insertBetLog(player, roundId, bet) {
+    async insertBetLog(player, roundId, bet, rate) {
         const newBetLog = {
             uid: player.UID,
             name: player.profile.name,
@@ -44,15 +47,18 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
         if (player.session) {
             newBetLog.memberId = player.session.memberId;
             newBetLog.siteId = player.session.siteId;
+            newBetLog.partnerId = player.session.partnerId;
+            newBetLog.currency = player.session.currencyName;
+            newBetLog.rate = rate;
         }
 
         await this.betLogsRepository.create(newBetLog);
     }
 
-    adjustTotalBets(player, bet) {
+    adjustTotalBets(player, bet, rate) {
         const totalBets = this.gameData.totalBets;
 
-        trackBetChoices(totalBets, bet.betChoices);
+        trackBetChoices(totalBets, bet.betChoices, rate);
     }
 
     formatApiBetInfo(payload) {
@@ -64,20 +70,42 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
         };
     }
 
-    generatePlacingBetResult(player, balance, bet) {
+    generatePlacingBetResult(player, balance, bet, rate) {
         const { betChoices, amount } = bet;
-        const ownBet = super.generatePlacingBetResult(player, balance, bet);
+        const ownBet = super.generatePlacingBetResult(player, balance, bet, rate);
 
         ownBet.ownChip = { betChoices, amount };
 
         return ownBet;
     }
 
+    updateGameDataChips(bet, rate) {
+        const { betChoices } = bet;
+
+        if (!this.gameData.chips[rate]) {
+            this.gameData.chips[rate] = {};
+        }
+
+        const chipRate = this.gameData.chips[rate];
+
+        Object.entries(betChoices).forEach(([typeOfBets, choicesPerType]) => {
+            if (!chipRate[typeOfBets]) {
+                chipRate[typeOfBets] = {};
+            }
+            const trackChoicesPerType = chipRate[typeOfBets];
+
+            Object.entries(choicesPerType).forEach(([betChoice, choiceAmount]) => {
+                trackChoicesPerType[betChoice] = trackChoicesPerType[betChoice] ?? {};
+                trackChoicesPerType[betChoice][choiceAmount] = (trackChoicesPerType[betChoice][choiceAmount] || 0) + 1;
+            });
+        });
+    }
+
     adjustBetTracks = (playerName, bet, reduce = false) => {
         if (this.gameData.ingame?.[playerName]) {
             const { betTracks } = this.gameData.ingame[playerName];
 
-            trackBetChoices(betTracks, bet.betChoices, reduce);
+            trackBetChoices(betTracks, bet.betChoices, 1, reduce);
         }
     };
 }

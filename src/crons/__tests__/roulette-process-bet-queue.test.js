@@ -31,6 +31,11 @@ gameData.gameConfigs = {
         bigSmall: 2000,
     },
 };
+gameData.exchangeRates = {
+    code: {
+        US: 1,
+    },
+};
 
 const placeBetPublisher = new PlaceBetPublisher(definition.name, gameData);
 
@@ -143,6 +148,8 @@ const mockPlayer = () => {
             userId: 1,
             memberId: 1,
             siteId: "123456",
+            multiplier: 1,
+            currencyCode: "US",
         },
         socketClient: {
             emit: jest.fn(),

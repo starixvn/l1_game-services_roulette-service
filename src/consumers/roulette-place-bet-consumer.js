@@ -10,7 +10,7 @@ export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
         return [
             {
                 failure: !configs.enabled,
-                notice: this.getNoticeObj(helpers.noticeHelper.placeBetNextRound),
+                notice: this.getNoticeObj(helpers.noticeHelper.invalidBet),
             },
             {
                 failure:
@@ -27,11 +27,12 @@ export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
     }
 
     composeBetAmountValidationCriteria(player, betChoices, totalAmount, freeBet) {
+        const settings = this.gameData.currencyGroupGames.find((x) => x.groupId.toString() === player.session.currencyGroupId);
         const configs = this.gameData.gameConfigs;
         const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
         const totalAmountOfExistingBets = this.calculateTotalAmount(betTracks);
-        const minBet = Math.max(player.profile.minBet, configs.minbet);
-        const maxBet = Math.min(player.profile.maxBet, configs.maxbet);
+        const minBet = Math.max(player.profile.minBet, settings.minBet);
+        const maxBet = Math.min(player.profile.maxBet, settings.maxBet);
 
         return [
             {
@@ -39,7 +40,7 @@ export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
                 notice: this.getNoticeObj(helpers.noticeHelper.invalidBet),
             },
             {
-                failure: this.anyChoiceExceedItsMaxBet(betChoices, betTracks, configs, player.profile.maxBet),
+                failure: this.anyChoiceExceedItsMaxBet(betChoices, betTracks, settings, player.profile.maxBet),
                 notice: this.getNoticeObj(notices.maxBetOfAnyChoiceReached),
             },
             {
@@ -150,7 +151,7 @@ export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
 
     anyChoiceExceedItsMaxBet(betChoices, betTracks, configs, userMaxBet) {
         return Object.entries(betChoices).some(([typeOfBets, choicesPerType]) => {
-            const maxBetPerChoice = Math.min(userMaxBet, configs.choices_maxbet[typeOfBets] ?? 0);
+            const maxBetPerChoice = Math.min(userMaxBet, configs.maxBetPerChoices[typeOfBets] ?? 0);
 
             return Object.entries(choicesPerType).some(([betChoice, amount]) => {
                 const currentBetAmount = betTracks[typeOfBets]?.[betChoice] ?? 0;
