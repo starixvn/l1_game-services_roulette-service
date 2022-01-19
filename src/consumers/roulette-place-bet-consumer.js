@@ -73,6 +73,31 @@ export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
         ];
     }
 
+    composeHedgeBetValidationCriteria(betChoices, player) {
+        const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
+        let hedgeBetGroup = "";
+
+        Object.entries(betChoices).forEach(([typeOfBets, choicesPerType]) => {
+            const trackChoicesPerType = betTracks[typeOfBets] || {};
+            const isOnHedgeBetGroup = this.definition.hedgeBetGroups.some((group) => group === typeOfBets);
+
+            if (isOnHedgeBetGroup) {
+                const setOfUniqueBetChoice = new Set([...Object.keys(trackChoicesPerType ?? {}), ...Object.keys(choicesPerType ?? {})]);
+
+                setOfUniqueBetChoice.size > 1 && (hedgeBetGroup = typeOfBets);
+            }
+        });
+
+        return [
+            {
+                failure: !!hedgeBetGroup,
+                notice: this.getNoticeObj(helpers.noticeHelper.disallowHedgeBet, {
+                    hedgeBetGroup: this.definition.choices.choicesGroupByType[hedgeBetGroup],
+                }),
+            },
+        ];
+    }
+
     consume(player, payload) {
         Object.assign(payload, {
             amount: this.calculateTotalAmount(payload.betChoices) >> 0,
