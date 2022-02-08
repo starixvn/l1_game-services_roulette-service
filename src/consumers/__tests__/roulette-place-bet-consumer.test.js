@@ -203,7 +203,7 @@ describe("composeHedgeBetValidationCriteria tests", () => {
         expect(result).toStrictEqual([
             {
                 failure: true,
-                notice: { errorCode: "SB1939", hedgeBetGroup: ["big", "small"] },
+                notice: { errorCode: "SB1939", hedgeBetGroup: ["small", "big"] },
             },
         ]);
     });
