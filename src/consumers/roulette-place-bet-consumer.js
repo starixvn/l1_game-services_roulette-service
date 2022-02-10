@@ -2,6 +2,12 @@ import { helpers } from "sc-common";
 import { PlaceBetConsumer } from "sc-game-base/src/core/event-consumers";
 import notices from "../constants/notices";
 
+const HedgeBetGroupByType = {
+    oddEven: ["even", "odd"],
+    bigSmall: ["small", "big"],
+    redBlack: ["red", "black"],
+};
+
 export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
     composeBettingTimeValidationCriteria() {
         const configs = this.gameData.gameConfigs;
@@ -69,6 +75,31 @@ export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
             {
                 failure: this.anyInvalidChoice(betChoices, validChoices),
                 notice: this.getNoticeObj(notices.invalidBetChoice),
+            },
+        ];
+    }
+
+    composeHedgeBetValidationCriteria(betChoices, player) {
+        const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
+        let hedgeBetType = "";
+
+        Object.entries(betChoices).forEach(([typeOfBets, choicesPerType]) => {
+            const trackChoicesPerType = betTracks[typeOfBets] || {};
+            const isOnHedgeBetGroup = this.definition.hedgeBetGroups.some((group) => group === typeOfBets);
+
+            if (isOnHedgeBetGroup) {
+                const setOfUniqueBetChoice = new Set([...Object.keys(trackChoicesPerType ?? {}), ...Object.keys(choicesPerType ?? {})]);
+
+                setOfUniqueBetChoice.size > 1 && (hedgeBetType = typeOfBets);
+            }
+        });
+
+        return [
+            {
+                failure: !!hedgeBetType,
+                notice: this.getNoticeObj(helpers.noticeHelper.disallowHedgeBet, {
+                    hedgeBetGroup: HedgeBetGroupByType[hedgeBetType],
+                }),
             },
         ];
     }
