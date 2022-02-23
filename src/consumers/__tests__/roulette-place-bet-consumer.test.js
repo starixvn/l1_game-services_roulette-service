@@ -152,6 +152,63 @@ describe("composeBetAmountValidationCriteria tests", () => {
     });
 });
 
+describe("composeHedgeBetValidationCriteria tests", () => {
+    it("valid bet, criteria has failure = false", () => {
+        const player = {
+            profile: {
+                name: "player",
+                minBet: 1,
+                maxBet: 2000,
+            },
+        };
+        const betChoices = {
+            bigSmall: { big: 5 },
+            straightUp: {
+                10: 100,
+            },
+        };
+        const userBetTracks = {
+            bigSmall: { big: 10 },
+        };
+        const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
+        const consumer = initPlaceBetConsumer(definition, { ...gameData, ingame: { [player.profile.name]: { betTracks: userBetTracks } } });
+
+        const result = consumer.composeHedgeBetValidationCriteria(betChoices, player);
+
+        expect(result.every((x) => !x.failure)).toBeTrue();
+    });
+
+    it("invalid bet, criteria has failure = true", () => {
+        const player = {
+            profile: {
+                name: "player",
+                minBet: 1,
+                maxBet: 2000,
+            },
+        };
+        const betChoices = {
+            bigSmall: { big: 5 },
+            straightUp: {
+                10: 100,
+            },
+        };
+        const userBetTracks = {
+            bigSmall: { small: 10 },
+        };
+        const definition = new Table.TableGameDefinition(gameSettings, generateResult, getSettlementResult);
+        const consumer = initPlaceBetConsumer(definition, { ...gameData, ingame: { [player.profile.name]: { betTracks: userBetTracks } } });
+
+        const result = consumer.composeHedgeBetValidationCriteria(betChoices, player);
+
+        expect(result).toStrictEqual([
+            {
+                failure: true,
+                notice: { errorCode: "SB1939", hedgeBetGroup: ["small", "big"] },
+            },
+        ]);
+    });
+});
+
 describe("consume tests", () => {
     it("validateBetRequest return true, should push bet to queue", () => {
         const player = {

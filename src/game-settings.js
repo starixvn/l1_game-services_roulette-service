@@ -16,4 +16,5 @@ export default {
     choicesMapper: {},
     defaultBetTracks: {},
     numberOfRoundHistory: 300,
+    hedgeBetGroups: ["oddEven", "bigSmall", "redBlack"],
 };
