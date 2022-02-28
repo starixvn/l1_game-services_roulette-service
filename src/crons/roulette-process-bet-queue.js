@@ -25,6 +25,8 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             newBet.partnerId = player.session.partnerId;
             newBet.currency = player.session.currencyName;
             newBet.rate = rate;
+            newBet.operatorId = player.session.partnerId;
+            newBet.playerId = player.session.memberId;
         }
 
         await this.betsRepository.updateOne(
@@ -50,6 +52,8 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             newBetLog.partnerId = player.session.partnerId;
             newBetLog.currency = player.session.currencyName;
             newBetLog.rate = rate;
+            newBetLog.operatorId = player.session.partnerId;
+            newBetLog.playerId = player.session.memberId;
         }
 
         await this.betLogsRepository.create(newBetLog);

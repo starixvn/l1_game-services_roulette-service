@@ -8832,20 +8832,20 @@ sc-api-client@^1.3.0:
     axios "^0.19.2"
     openid-client "^3.15.9"
 
-sc-base-apis@1.15.1:
-  version "1.15.1"
-  resolved "https://npm.lumigame.com/sc-base-apis/-/sc-base-apis-1.15.1.tgz#456a1b2929cb0556ae789c46f7d4f8cfa5926a2d"
-  integrity sha512-YfZz8aTOrt50Jo5T5CCBISi/o64yGrDJ9JFLlG2IqGV48aVNqSQ2fHTsjEkozM0/AUy1wVFdIOe226rrwoBCPA==
+sc-base-apis@1.15.2-beta.2:
+  version "1.15.2-beta.2"
+  resolved "https://npm.lumigame.com/sc-base-apis/-/sc-base-apis-1.15.2-beta.2.tgz#41b241669488ed60ca9a348a51a5d50d791a675e"
+  integrity sha512-Qx5ESWYOFh3gm3oE76J8c7RN5jYHNCDvG+YyYzsJNOwbHOzUB0CijBJcE20LBHMcbowdv5sA8R6C5aE+/vZH+Q==
   dependencies:
     moment "^2.27.0"
     sc-api-client "^1.3.0"
-    sc-base-database "1.9.1"
+    sc-base-database "1.9.2-beta.1"
     sc-common "^1.8.0"
 
-sc-base-database@1.9.1:
-  version "1.9.1"
-  resolved "https://npm.lumigame.com/sc-base-database/-/sc-base-database-1.9.1.tgz#b60b8558abbaa688c1d6583e36b7ede2b33e9f57"
-  integrity sha512-3qEwy0aXEv7WGXUqB/WYHf2+QW+88Yq2oSPtFHZaa1z+yITqLCTVWtCfBjW/jaIhRzSc4uwVD9+dCrQQyfbJhg==
+sc-base-database@1.9.2-beta.1:
+  version "1.9.2-beta.1"
+  resolved "https://npm.lumigame.com/sc-base-database/-/sc-base-database-1.9.2-beta.1.tgz#f059ac5b17762802a6ce81adbe3c32774f234748"
+  integrity sha512-mgn1uHOOUmUCltVTcm9iWoPYKcTy+SaXwZoO+njZCi2Cu0kDK/FEp+AnetdW4vzxdhPoA6JUAby0B63IDO2dCg==
   dependencies:
     mongoose "^5.9.25"
     sc-common "^1.6.0"
@@ -8872,10 +8872,10 @@ sc-common@^1.8.0:
     mongoose-long "^0.3.0"
     numeral "^2.0.6"
 
-sc-game-base@2.4.3-beta.1:
-  version "2.4.3-beta.1"
-  resolved "https://npm.lumigame.com/sc-game-base/-/sc-game-base-2.4.3-beta.1.tgz#3edf7abd3a6b975280e24b8720a47d64f55f0b9e"
-  integrity sha512-3dIu9VMbxH3jBR93JhVt3Rub4xhV+RMUe0XO91oT+hc2NXhg0wRbOgoG0fw9Ygm/v8eLtNcu8ksHSkPkXDYCig==
+sc-game-base@2.4.3-beta.6:
+  version "2.4.3-beta.6"
+  resolved "https://npm.lumigame.com/sc-game-base/-/sc-game-base-2.4.3-beta.6.tgz#14eda4a6cb8460b5bfae64cc71b4456c7c82daf7"
+  integrity sha512-eFSs84j8oahUoHwPNHBHA0AHSet8YN5zhowOZ44OIMX59BIltpmDP20XufGnjgiv9zvroIeXP9q0/VtpH66TzA==
   dependencies:
     awilix "^4.3.1"
     axios "^0.20.0"
@@ -8889,8 +8889,8 @@ sc-game-base@2.4.3-beta.1:
     mongoose "^5.9.25"
     morgan "^1.10.0"
     openid-client "^4.2.0"
-    sc-base-apis "1.15.1"
-    sc-base-database "1.9.1"
+    sc-base-apis "1.15.2-beta.2"
+    sc-base-database "1.9.2-beta.1"
     sc-common "^1.8.0"
     socket.io "^4.1.2"
     socket.io-msgpack-parser "^3.0.1"
