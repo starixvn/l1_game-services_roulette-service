@@ -27,7 +27,7 @@ const schema = new mongoose.Schema({
 
     playerId: { type: Number },
     operatorId: { type: String, required: false },
-    roundId: { type: Number, default: 0 },
+    roundId: { type: Number, required: true },
 });
 
 export default mongoose.model("Roulette_cuoc", schema);

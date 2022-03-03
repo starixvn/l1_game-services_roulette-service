@@ -15,6 +15,7 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             time: new Date(),
             odds: configs.odds,
             freeBet: bet.freeBet,
+            roundId,
         };
         const existingBetFilter = { uid: player.UID, phien: roundId, freeBet: bet.freeBet };
         const existingBetIncrement = { ...buildBetAmountIncrement(bet.betChoices), totalAmount: bet.amount };
@@ -44,6 +45,7 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             time: new Date(),
             freeBet: bet.freeBet,
             ...bet.betChoices,
+            roundId,
         };
 
         if (player.session) {
