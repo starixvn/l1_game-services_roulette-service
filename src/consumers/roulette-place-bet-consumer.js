@@ -121,8 +121,12 @@ export default class RoulettePlaceBetConsumer extends PlaceBetConsumer {
             const newPlayer = {
                 name: player.profile.name,
                 currency: player.session.currency,
+                system: player.session.system,
+                partnerId: player.session.partnerId,
                 betTracks: {},
                 betQueue: [],
+
+                operatorId: player.session.partnerId,
             };
 
             this.gameData.ingame[name] = newPlayer;

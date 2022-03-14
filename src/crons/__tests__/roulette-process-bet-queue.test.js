@@ -36,6 +36,11 @@ gameData.exchangeRates = {
         US: 1,
     },
 };
+gameData.currencies = [
+    { code: "US", isTest: false },
+    { code: "EUR", isTest: false },
+    { code: "UUS", isTest: true },
+];
 
 const placeBetPublisher = new PlaceBetPublisher(definition.name, gameData);
 

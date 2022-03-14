@@ -15,6 +15,7 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             time: new Date(),
             odds: configs.odds,
             freeBet: bet.freeBet,
+            roundId,
         };
         const existingBetFilter = { uid: player.UID, phien: roundId, freeBet: bet.freeBet };
         const existingBetIncrement = { ...buildBetAmountIncrement(bet.betChoices), totalAmount: bet.amount };
@@ -25,6 +26,8 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             newBet.partnerId = player.session.partnerId;
             newBet.currency = player.session.currencyName;
             newBet.rate = rate;
+            newBet.operatorId = player.session.partnerId;
+            newBet.playerId = player.session.memberId;
         }
 
         await this.betsRepository.updateOne(
@@ -42,6 +45,7 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             time: new Date(),
             freeBet: bet.freeBet,
             ...bet.betChoices,
+            roundId,
         };
 
         if (player.session) {
@@ -50,6 +54,8 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             newBetLog.partnerId = player.session.partnerId;
             newBetLog.currency = player.session.currencyName;
             newBetLog.rate = rate;
+            newBetLog.operatorId = player.session.partnerId;
+            newBetLog.playerId = player.session.memberId;
         }
 
         await this.betLogsRepository.create(newBetLog);
