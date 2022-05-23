@@ -108,4 +108,14 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             trackBetChoices(betTracks, bet.betChoices, 1, reduce);
         }
     };
+
+    adjustOwnBets(playerName, bet) {
+        if (this.gameData.ingame?.[playerName]) {
+            const playerInGame = this.gameData.ingame[playerName];
+
+            playerInGame.ownBets = playerInGame.ownBets ?? {};
+
+            trackBetChoices(playerInGame.ownBets, bet.betChoices, 1);
+        }
+    }
 }
