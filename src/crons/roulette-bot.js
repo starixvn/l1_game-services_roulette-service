@@ -115,6 +115,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
             name: bot.name,
             phien: this.gameData.roundId,
             time: new Date(),
+            roundId: this.gameData.roundId,
         };
 
         await this.tempBetsRepository.updateOne(
