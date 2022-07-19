@@ -1,6 +1,26 @@
 import constants from "../../constants";
 import { getSettlementResult, generateResult } from "../result-helper";
 
+const chanceMock = { pickoneIndex: 0 };
+
+jest.mock("chance", () => {
+    return function () {
+        const orig = {
+            ...jest.requireActual("chance"),
+        };
+
+        return {
+            natural: (opt) => {
+                return new orig.Chance().natural(opt);
+            },
+            integer: (opt) => {
+                return new orig.Chance().integer(opt);
+            },
+            pickone: (arr) => arr[chanceMock.pickoneIndex],
+        };
+    };
+});
+
 describe("getSettlementResult tests", () => {
     const testCases = [
         [
@@ -61,11 +81,19 @@ describe("getSettlementResult tests", () => {
     });
 });
 
-
 describe("generateResult tests", () => {
+    const testCases = [
+        { randomMode: 1, pickoneIndex: 0 },
+        { randomMode: 1, pickoneIndex: 1 },
+        { randomMode: 2, pickoneIndex: 0 },
+        { randomMode: 3, pickoneIndex: 0 },
+        { randomMode: 3, pickoneIndex: 1 },
+        { randomMode: 4, pickoneIndex: 0 },
+    ];
 
-    it("return correct number", () => {
-        const result = generateResult();
+    it.each(testCases)("return correct number", (testCase) => {
+        chanceMock.pickoneIndex = testCase.pickoneIndex;
+        const result = generateResult(testCase.randomMode);
         expect(result).toBeGreaterThanOrEqual(constants.numberWheel.min);
         expect(result).toBeLessThanOrEqual(constants.numberWheel.max);
     });
