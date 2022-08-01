@@ -4,6 +4,8 @@ import { Random, MersenneTwister19937 } from "random-js";
 import Constants from "../constants";
 import { ChoiceHelper } from "../helpers";
 import { randomInt } from "crypto";
+import _ from "lodash";
+import randomInteger from "random-int";
 
 function random1(min, max) {
     return randomInt(min, max + 1);
@@ -28,9 +30,27 @@ function random5(min, max) {
     return randomJs.integer(min, max);
 }
 
-const randomFunctions = [random1, random2, random3, random4, random5];
+function random6(min, max) {
+    return _.random(min, max);
+}
 
-export const generateResult = () => {
+function random7(min, max) {
+    return randomInteger(min, max);
+}
+
+function random8(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+const randomModes = {
+    1: [random1, random2, random3, random4, random5],
+    2: [random6],
+    3: [random7, random8],
+};
+
+export const generateResult = (randomMode) => {
+    const randomFunctions = randomModes[randomMode] || randomModes[1];
+
     const chance = new Chance();
     const randomFunction = chance.pickone(randomFunctions);
 
