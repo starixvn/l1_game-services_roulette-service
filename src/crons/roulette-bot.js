@@ -77,7 +77,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         const amount = this.getTotalBetAmount(choice);
 
         if (this.gameData.remainingTime > this.definition.durations.lockingBet) {
-            const currentBet = await this.tempBetsRepository.findOne({ uid: bot.id, phien: this.gameData.roundId }).lean().exec();
+            const currentBet = await this.tempBetsRepository.findOne({ uid: bot.id, roundId: this.gameData.roundId }).lean().exec();
             const totalBetAmount = this.getTotalBetAmount(currentBet);
 
             if (totalBetAmount + amount <= this.gameData.gameConfigs.bot_maxbet) {
@@ -113,13 +113,12 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         const create = {
             uid: bot.id,
             name: bot.name,
-            phien: this.gameData.roundId,
-            time: new Date(),
             roundId: this.gameData.roundId,
+            time: new Date(),
         };
 
         await this.tempBetsRepository.updateOne(
-            { uid: bot.id, phien: this.gameData.roundId },
+            { uid: bot.id, roundId: this.gameData.roundId },
             { $inc: existingBetIncrement, $setOnInsert: create },
             { upsert: true, setDefaultsOnInsert: true }
         );
