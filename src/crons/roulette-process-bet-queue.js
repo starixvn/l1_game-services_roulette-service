@@ -16,7 +16,7 @@ export default class RouletteProcessBetQueue extends Table.Crons.TableProcessBet
             freeBet: bet.freeBet,
             roundId,
         };
-        const existingBetFilter = { uid: player.UID, phien: roundId, freeBet: bet.freeBet };
+        const existingBetFilter = { uid: player.UID, roundId, freeBet: bet.freeBet };
         const existingBetIncrement = { ...buildBetAmountIncrement(bet.betChoices), totalAmount: bet.amount };
 
         if (player.session) {

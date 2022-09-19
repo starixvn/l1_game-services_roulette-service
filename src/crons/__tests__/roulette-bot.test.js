@@ -4,6 +4,7 @@ import gameSettings from "../../game-settings";
 import { Table } from "sc-game-base";
 import RouletteBot from "../roulette-bot";
 import BaseEventPublishers from "sc-game-base/src/core/event-publishers/base-event-publisher";
+import appConfigs from "../../app-configs";
 
 jest.mock("sc-game-base/src/core/event-publishers/base-event-publisher");
 
@@ -59,7 +60,7 @@ tempBetsRepository.updateOne = jest.fn();
 describe("reset tests", () => {
     it("should call resetAllBotData when botenabled is false", async () => {
         gameData.gameConfigs.botenabled = false;
-        const bot = new RouletteBot(definition, gameData, publisher, userInfosRepository, tempBetsRepository);
+        const bot = new RouletteBot(definition, gameData, publisher, userInfosRepository, tempBetsRepository, appConfigs);
         jest.spyOn(bot, "resetAllBotData");
 
         await bot.reset();
@@ -71,7 +72,7 @@ describe("reset tests", () => {
 
 describe("place bet tests", () => {
     it("should call publishToAllUsers, update bot's betTracks when bet is successful", async () => {
-        const bot = new RouletteBot(definition, gameData, publisher, userInfosRepository, tempBetsRepository);
+        const bot = new RouletteBot(definition, gameData, publisher, userInfosRepository, tempBetsRepository, appConfigs);
         tempBetsRepository
             .findOne()
             .lean()
@@ -88,7 +89,7 @@ describe("place bet tests", () => {
 
 describe("get bet choice tests", () => {
     it("should not choose straightUp or split choice when total bet is greater than raito", () => {
-        const bot = new RouletteBot(definition, gameData, publisher, userInfosRepository, tempBetsRepository);
+        const bot = new RouletteBot(definition, gameData, publisher, userInfosRepository, tempBetsRepository, appConfigs);
         bot.resetAllBets();
         bot.allBets.straightUp = { 10: 100 };
         const botPlayer = { id: 1, choices: [], betOnChoices: {}, remainTickets: 1 };
@@ -100,8 +101,8 @@ describe("get bet choice tests", () => {
 
 describe("getQuickBets tests", () => {
     it("should return quick bet succesfully", () => {
-        const bot = new RouletteBot(definition, gameData, publisher, userInfosRepository, tempBetsRepository);
+        const bot = new RouletteBot(definition, gameData, publisher, userInfosRepository, tempBetsRepository, appConfigs);
         const quickBet = bot.getQuickBets(2);
         expect(quickBet).not.toBeEmpty();
-    })
-})
+    });
+});
