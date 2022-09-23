@@ -259,9 +259,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
     }
 
     convertAmountToChip(amount) {
-        const chipList = this.isSC1()
-            ? this.appConfigs.chips.filter((chip) => amount % chip === 0)
-            : this.appConfigs.chips.filter((chip) => amount / chip >= 1);
+        const chipList = this.appConfigs.chips.filter((chip) => amount / chip >= 1);
 
         return chipList.length > 0 ? chipList[0] : this.getMinBet();
     }
