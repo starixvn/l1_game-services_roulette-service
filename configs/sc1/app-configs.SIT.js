@@ -58,5 +58,5 @@ export default {
     },
     enableMsgpackParser: true,
     chips: [1000, 500, 200, 100, 50, 10, 5, 1],
-    appName: "sc1",
+    maxQuickBets: 5,
 };

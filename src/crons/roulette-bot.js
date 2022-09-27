@@ -210,9 +210,12 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         const chance = new Chance();
         const options = Object.values(quickBets);
         const randomOption = options[chance.integer({ min: 0, max: options.length - 1 })];
-        const betAmount = this.isSC1
-            ? chance.integer({ min: this.getMinBet(), max: 5 })
-            : this.convertAmountToChip(chance.integer({ min: this.getMinBet(), max: 100_000 }));
+        const betAmount = this.convertAmountToChip(
+            chance.integer({
+                min: this.getMinBet(),
+                max: this.appConfigs.maxQuickBets,
+            })
+        );
 
         return randomOption(betAmount, randomNumber);
     }
