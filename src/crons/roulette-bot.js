@@ -117,7 +117,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
             roundId: this.gameData.roundId,
             time: new Date(),
             rate: 1,
-            currency: "",
+            currency: " ",
         };
 
         await this.tempBetsRepository.updateOne(
@@ -291,9 +291,5 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         });
 
         return total;
-    }
-
-    isSC1() {
-        return this.appConfigs.appName === "sc1";
     }
 }
