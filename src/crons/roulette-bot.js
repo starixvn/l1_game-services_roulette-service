@@ -13,8 +13,9 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
      * @param {mongoose.Model} userInfosRepository
      * @param {mongoose.Model} tempBetsRepository
      */
-    constructor(definition, gameData, publisher, userInfosRepository, tempBetsRepository) {
+    constructor(definition, gameData, publisher, userInfosRepository, tempBetsRepository, appConfigs) {
         super(definition, gameData, publisher, userInfosRepository, tempBetsRepository);
+        this.appConfigs = appConfigs;
 
         this.betTypeKeys = [
             "bigSmall",
@@ -77,7 +78,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         const amount = this.getTotalBetAmount(choice);
 
         if (this.gameData.remainingTime > this.definition.durations.lockingBet) {
-            const currentBet = await this.tempBetsRepository.findOne({ uid: bot.id, phien: this.gameData.roundId }).lean().exec();
+            const currentBet = await this.tempBetsRepository.findOne({ uid: bot.id, roundId: this.gameData.roundId }).lean().exec();
             const totalBetAmount = this.getTotalBetAmount(currentBet);
 
             if (totalBetAmount + amount <= this.gameData.gameConfigs.bot_maxbet) {
@@ -113,13 +114,14 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         const create = {
             uid: bot.id,
             name: bot.name,
-            phien: this.gameData.roundId,
-            time: new Date(),
             roundId: this.gameData.roundId,
+            time: new Date(),
+            rate: 1,
+            currency: " ",
         };
 
         await this.tempBetsRepository.updateOne(
-            { uid: bot.id, phien: this.gameData.roundId },
+            { uid: bot.id, roundId: this.gameData.roundId },
             { $inc: existingBetIncrement, $setOnInsert: create },
             { upsert: true, setDefaultsOnInsert: true }
         );
@@ -210,7 +212,12 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
         const chance = new Chance();
         const options = Object.values(quickBets);
         const randomOption = options[chance.integer({ min: 0, max: options.length - 1 })];
-        const betAmount = chance.integer({ min: this.getMinBet(), max: 5 });
+        const betAmount = this.convertAmountToChip(
+            chance.integer({
+                min: this.getMinBet(),
+                max: this.appConfigs.maxQuickBets,
+            })
+        );
 
         return randomOption(betAmount, randomNumber);
     }
@@ -257,7 +264,7 @@ export default class RouletteBot extends Table.Crons.TableGameBot {
     }
 
     convertAmountToChip(amount) {
-        const chipList = constants.chips.filter((chip) => amount % chip === 0);
+        const chipList = this.appConfigs.chips.filter((chip) => amount / chip >= 1);
 
         return chipList.length > 0 ? chipList[0] : this.getMinBet();
     }

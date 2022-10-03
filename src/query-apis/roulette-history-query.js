@@ -4,12 +4,12 @@ export default class RouletteHistoryQuery extends Core.QueryApis.HistoryQuery {
     getBetLogDetails(player, roundId) {
         return this.betLogsRepository
             .find(
-                { phien: roundId, uid: player.UID },
+                { roundId, uid: player.UID },
                 {
                     _id: false,
                     uid: false,
-                    phien: false,
-                    memberId: false,
+                    roundId: false,
+                    playerId: false,
                     siteId: false,
                     __v: false,
                 },

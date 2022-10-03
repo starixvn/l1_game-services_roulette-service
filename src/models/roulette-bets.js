@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const schema = new mongoose.Schema({
     uid: { type: String, required: true },
     name: { type: String, required: true },
-    phien: { type: Number, required: true },
 
     straightUp: { type: Object },
     split: { type: Object },
@@ -18,19 +17,16 @@ const schema = new mongoose.Schema({
     oddEven: { type: Object },
     bigSmall: { type: Object },
 
-    thanhtoan: { type: Boolean, default: false },
     totalAmount: { type: Number, default: 0 },
     betwin: { type: Number, default: 0 },
     time: { type: Date },
     odds: { type: Object },
 
-    memberId: { type: Number },
     siteId: { type: String },
     freeBet: { type: Boolean, default: false },
 
-    currency: { type: String, require: true },
-    rate: { type: Number, require: true },
-    partnerId: { type: String, require: true },
+    currency: { type: String, required: true },
+    rate: { type: Number, required: true },
 
     playerId: { type: Number },
     operatorId: { type: String, required: false },
