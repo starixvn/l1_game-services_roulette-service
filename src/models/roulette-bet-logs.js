@@ -19,11 +19,11 @@ const schema = new mongoose.Schema({
 
     siteId: { type: String },
 
-    currency: { type: String, required: true },
+    currency: { type: String },
     rate: { type: Number, required: true },
 
     playerId: { type: Number },
-    operatorId: { type: String, required: false },
+    operatorId: { type: String },
     roundId: { type: Number, required: true },
 });
 
