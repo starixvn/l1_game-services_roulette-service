@@ -2,13 +2,15 @@ import { getSettlementResult, generateResult } from "../src/helpers/result-helpe
 
 const streakNumber = 4;
 const longestStreak = 4;
+const totalNumber = 37;
+
 const statisticsChoices = {
     redBlack: ["red", "black"],
     oddEven: ["odd", "even"],
     bigSmall: ["big", "small"],
     column: [1, 2],
     dozen: [1, 2, 3],
-    no: new Array(37).fill(0).map((_, i) => i),
+    no: new Array(totalNumber).fill(0).map((_, i) => i),
 };
 
 function initStreak() {
@@ -45,6 +47,10 @@ function run(randomMode) {
     const totalRounds = 100_000;
 
     const stats = {};
+    for (let index = 0; index < totalNumber; index++) {
+        stats[`no_${index}`] = 0;
+    }
+
     const occurrences = initStreak();
     const streaks = initStreak();
 
@@ -53,6 +59,7 @@ function run(randomMode) {
         const settlement = getSettlementResult(result);
 
         calculateStreaks(occurrences, "no", [result], streaks);
+        stats[`no_${result}`]++;
 
         Object.keys(settlement).reduce((_, choiceGroup) => {
             if (!statisticsChoices[choiceGroup]) {
