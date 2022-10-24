@@ -44,7 +44,7 @@ function random8(min, max) {
 
 const randomModes = {
     1: [random1, random2, random3, random4, random5],
-    2: [random6],
+    2: [random2, random3, random6],
     3: [random7, random8],
 };
 
