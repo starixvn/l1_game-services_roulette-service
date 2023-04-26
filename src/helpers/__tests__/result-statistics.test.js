@@ -20,5 +20,6 @@ describe("generateResult", () => {
         const min = Math.min(...frequencies);
         const max = Math.max(...frequencies);
         expect((max - min) / totalRounds <= acceptedDiff).toBeTrue();
+        console.log(`mode ${testCase}`, frequencies);
     });
 });
