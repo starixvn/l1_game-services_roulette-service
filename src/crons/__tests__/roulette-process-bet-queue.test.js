@@ -151,7 +151,7 @@ const mockPlayer = () => {
         profile: { name: "player01", minBet: 1, maxBet: 5000 },
         session: {
             userId: 1,
-            playerId: 1,
+            playerId: "1",
             siteId: "123456",
             multiplier: 1,
             currencyCode: "US",
