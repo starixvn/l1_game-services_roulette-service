@@ -54,4 +54,9 @@ export default {
     enableMsgpackParser: true,
     chips: [20_000_000, 10_000_000, 5_000_000, 1_000_000, 500_000, 200_000, 100_000, 50_000, 20_000, 10_000],
     maxQuickBets: 100_000,
+    otel: {
+        system: "VG",
+        enabled: false,
+        endpoint: "http://10.2.190.51:4318/v1/traces",
+    },
 };
